@@ -4,7 +4,6 @@
 const NS = 'http://www.w3.org/2000/svg';
 const $ = (selector) => document.querySelector(selector);
 const drawings = window.DRAWINGS;
-const referenceImagesEnabled = document.documentElement.dataset.referenceImages !== 'false';
 const stage = $('#stage');
 const state = {
   drawing: null, svg: null, tool: 'pan', unit: 'mm', view: null, fitted: null,
@@ -79,7 +78,7 @@ function openDrawing(id) {
   state.svg.removeAttribute('height');
   state.svg.setAttribute('role', 'group');
   state.svg.append(svgElement('g', { id: 'ruler-layer', 'pointer-events': 'none' }));
-  if (referenceImagesEnabled && drawing.sourceImage) {
+  if (drawing.sourceImage) {
     const overlay = svgElement('image', { id: 'source-overlay', ...drawing.sourceImage, opacity: 0, 'pointer-events': 'none', preserveAspectRatio: 'none' });
     overlay.setAttribute('href', window.SOURCE_IMAGES?.[drawing.page] || `assets/source-${drawing.page}.jpg`);
     state.svg.insertBefore(overlay, state.svg.querySelector('#ruler-layer'));
@@ -359,7 +358,6 @@ function renderRulers() {
 }
 
 function updateSource() {
-  if (!referenceImagesEnabled) return;
   const page = $('#source-page').value;
   $('#source-image').src = window.SOURCE_IMAGES?.[page] || `assets/source-${page}.jpg`;
   $('#source-image').alt = `Original scanned source sheet ${page}: ${$('#source-page').selectedOptions[0].textContent}`;
@@ -411,7 +409,6 @@ function renderAudit() {
 }
 
 function toggleReference(force) {
-  if (!referenceImagesEnabled) return;
   const open = force ?? $('#reference-pane').hidden;
   $('#reference-pane').hidden = !open;
   $('.workspace').classList.toggle('reference-open', open);

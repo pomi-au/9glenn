@@ -2062,21 +2062,3 @@ input[type="checkbox"] {
   .render-quality-bar #render-progress { width: 100%; text-align: center; font-size: 11px; }
   .render-mode-switch button { padding: 7px 8px; }
 }
-
-/* Reference-free web publication. */
-html[data-reference-images="false"] #reference-button,
-html[data-reference-images="false"] .overlay-toolbar,
-html[data-reference-images="false"] .triple-panes figure:last-child,
-html[data-reference-images="false"] #triple-roof-tools label:has(#triple-roof-overlay) {
-  display: none !important;
-}
-html[data-reference-images="false"] .triple-panes {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: 1fr;
-}
-@media (max-width: 850px) {
-  html[data-reference-images="false"] .triple-panes {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-  }
-}

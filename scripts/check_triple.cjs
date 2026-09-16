@@ -18,7 +18,7 @@ const {
     p.on("request", (r) => {
       if (/^https?:/.test(r.url())) network.push(r.url());
     });
-    await p.goto("file://" + path.resolve("9-glenn-viewer.html") + "#first");
+    await p.goto("file://" + path.resolve("index.html") + "#first");
     await p.locator("#mode-compare").click();
     await p.waitForFunction(() => window.TripleView?.instance?.drawing);
     assert.equal(
@@ -337,7 +337,7 @@ const {
     await unsupported.addInitScript(() => {
       Object.defineProperty(navigator, "gpu", { value: undefined });
     });
-    await unsupported.goto("file://" + path.resolve("9-glenn-viewer.html") + "#compare/ground");
+    await unsupported.goto("file://" + path.resolve("index.html") + "#compare/ground");
     await unsupported.waitForFunction(() => window.TripleView?.instance?.drawing);
     assert.equal(await unsupported.locator("#triple-model canvas").count(), 0,
       "missing WebGPU never creates a fallback canvas");

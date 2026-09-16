@@ -53,15 +53,12 @@ function projection(data, drawing) {
 }
 
 export function mountTripleView() {
-  const referenceImagesEnabled = document.documentElement.dataset.referenceImages !== "false";
   const section = document.createElement("section");
   section.id = "triple-view";
   section.innerHTML = `<div class="view-heading triple-heading"><div><div class="eyebrow">SHARED DRAWING MODEL</div><h1>Compare drawings</h1><p>3D model, vector drawing and original PDF</p></div><label>Drawing <select id="triple-drawing" aria-label="Comparison drawing"></select></label></div>
     <div class="toolbar triple-toolbar"><div><button class="tool icon-button" id="triple-out" aria-label="Zoom out">−</button><output id="triple-zoom">100%</output><button class="tool icon-button" id="triple-in" aria-label="Zoom in">+</button><button class="tool" id="triple-fit">Fit all</button></div><div><button class="tool" id="triple-aligned" aria-pressed="true">Aligned</button><button class="tool" id="triple-angled" aria-pressed="false">Angled 3D</button></div><label class="triple-outline-option"><input id="triple-outlines" type="checkbox" checked> Outlines</label></div>
     <div class="triple-panes"><figure><figcaption>3D model <span id="triple-projection">Aligned</span></figcaption><div class="triple-surface" id="triple-model"><svg id="triple-input" aria-label="3D comparison. Drag to pan, scroll or pinch to zoom."></svg></div></figure><figure><figcaption>SVG <span>Editable geometry</span></figcaption><div class="triple-surface" id="triple-vector"></div></figure><figure><figcaption>PDF drawing <span id="triple-sheet"></span></figcaption><div class="triple-surface" id="triple-source"></div></figure></div><footer class="statusbar"><span>Linked comparison</span><span id="triple-hint">Linked pan and zoom · drag or scroll in any pane</span></footer><p id="triple-error" role="alert" hidden></p>`;
   document.querySelector(".main").append(section);
-  if (!referenceImagesEnabled)
-    section.querySelector(".triple-heading p").textContent = "3D model and vector drawing";
   const roofTools = document.createElement("div");
   roofTools.id = "triple-roof-tools";
   roofTools.hidden = true;
@@ -413,7 +410,7 @@ async function create(section) {
     for (const [key, value] of Object.entries(drawing.sourceImage))
       image.setAttribute(key, value);
     image.setAttribute("preserveAspectRatio", "none");
-    if (referenceImagesEnabled) image.setAttribute(
+    image.setAttribute(
       "href",
       window.SOURCE_IMAGES?.[drawing.page] ||
         `assets/source-${drawing.page}.jpg`,

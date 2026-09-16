@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-reference-images="false">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,7 +59,7 @@
           </div>
           <section id="reference-pane" class="reference-pane" hidden aria-label="Original PDF sheet">
             <div class="reference-header"><label for="source-page">Original sheet</label><select id="source-page" aria-label="Original source sheet"><option value="1">01 · Site survey</option><option value="2">02 · First floor</option><option value="3">03 · Cellar & site plan</option><option value="4">04 · Ground floor</option><option value="5">05 · Elevations 1 & 2</option><option value="6">06 · Elevations 3 & 4</option><option value="7">07 · Section X–X</option></select><button id="close-reference" class="tool icon-button" aria-label="Close source comparison">×</button></div>
-            <div class="reference-image-wrap"><svg id="source-viewport" xmlns="http://www.w3.org/2000/svg" aria-label="Linked PDF comparison. Drag to pan, scroll or pinch to zoom."><image id="source-calibrated" preserveAspectRatio="none"/></svg><img id="source-image" alt="Original scanned ground floor plan, sheet 4" tabindex="0" title="Click to enlarge; click again to fit" hidden></div>
+            <div class="reference-image-wrap"><svg id="source-viewport" xmlns="http://www.w3.org/2000/svg" aria-label="Linked PDF comparison. Drag to pan, scroll or pinch to zoom."><image id="source-calibrated" preserveAspectRatio="none"/></svg><img id="source-image" src="assets/source-4.jpg" alt="Original scanned ground floor plan, sheet 4" tabindex="0" title="Click to enlarge; click again to fit" hidden></div>
             <div class="reference-caption">Linked zoom and pan · drag either pane · ruler applies to vector only</div>
           </section>
         </div>
@@ -75,9 +75,9 @@
   </div>
   <dialog id="accuracy-dialog">
     <div class="dialog-heading"><h2>Dimension audit</h2><button id="close-dialog" class="tool icon-button" aria-label="Close measurement notes">×</button></div>
-    <p>The drawing uses straight walls, geometric curves and editable SVG text. One SVG coordinate equals one millimetre. Original PDF reference images are not included in this web viewer.</p>
+    <p>The drawing uses straight walls, geometric curves and editable SVG text. One SVG coordinate equals one millimetre. The original PDF is available only as a comparison reference.</p>
     <p><strong>Verified scope:</strong> the checks below compare reconstructed wall-face spans and level heights with legible printed dimensions. They do not certify every detail or a 100% image match.</p>
-
+    <p><strong>Source comparison:</strong> the overlay uses the overall scan scale, without deforming the PDF to fit the model. Local scan distortion and differences remain visible.</p>
     <p><strong>Ruler:</strong> distances are calculated from SVG geometry. Free point placements show approximate values; recognised dimension endpoints show the dimensioned model span. Exports contain vectors and text, without the reference image.</p>
     <h3 id="audit-summary"></h3>
     <div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>Span</th><th>PDF</th><th>Model</th><th>Difference</th></tr></thead><tbody id="audit-checks"></tbody></table></div>

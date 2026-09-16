@@ -11,6 +11,5 @@ node_modules
 /audit/
 /output/
 
-# Keep one web entry point and omit original reference scans.
+# Keep one web entry point.
 /9-glenn-viewer.html
-/assets/source-*.jpg
