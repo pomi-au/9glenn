@@ -2,7 +2,7 @@ tmp/
 .DS_Store
 __pycache__/
 
-node_modules/
+node_modules
 
 # Generated distribution archive exceeds GitHub's file-size limit.
 /9-glenn-drawing-set.zip
