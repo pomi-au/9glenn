@@ -1043,7 +1043,6 @@ dialog h3 {
   font-weight: 500;
   white-space: nowrap;
 }
-.app:not(.mode-3d):not(.mode-compare) #mode-2d,
 .app.mode-3d #mode-3d,
 .app.mode-compare #mode-compare {
   color: var(--accent);
@@ -2263,4 +2262,33 @@ input[type="checkbox"] {
 }
 .viewer-loading[hidden] {
   display: none;
+}
+
+/* Compare fills the available workspace with the selected views. */
+#triple-view [hidden] { display: none !important; }
+#triple-view .triple-panes {
+  grid-template-columns: repeat(var(--compare-pane-count, 3), minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
+}
+.compare-pane-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  font-size: 12px;
+}
+.compare-pane-controls > span { color: var(--muted); margin-right: 4px; }
+.compare-pane-controls .tool[aria-pressed="true"] {
+  background: #edf6fb;
+  border-color: #b7d8e8;
+  color: #216888;
+}
+.compare-pane-controls .tool:disabled { opacity: 1; cursor: default; }
+@media (max-width: 850px) {
+  #triple-view .triple-panes {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(var(--compare-pane-count, 3), minmax(0, 1fr));
+  }
 }

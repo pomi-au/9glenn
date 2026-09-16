@@ -596,7 +596,7 @@ function wireControls() {
     toggle.addEventListener('change', () => { state.layers[toggle.dataset.toggle] = toggle.checked; applyLayers(); });
   }
   document.addEventListener('keydown', (event) => {
-    if (['#3d', '#tour'].includes(location.hash) || $('#accuracy-dialog').open || event.ctrlKey || event.metaKey || /INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
+    if (['#3d', '#tour'].includes(location.hash) || location.hash.startsWith('#compare/') || $('#accuracy-dialog').open || event.ctrlKey || event.metaKey || /INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
     switch (event.key.toLowerCase()) {
       case 'm': setTool('measure'); break;
       case 'v': setTool('pan'); break;

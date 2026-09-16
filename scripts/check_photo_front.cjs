@@ -15,7 +15,7 @@ const assert = require("node:assert/strict"),
     const page = await browser.newPage({
       viewport: { width: 1500, height: 1000 },
     });
-    await page.goto("file://" + path.resolve("9-glenn-viewer.html") + "#3d");
+    await page.goto("file://" + path.resolve("index.html") + "#3d");
     await page.waitForFunction(() => window.Building3D?.instance);
     const finishes = await page.evaluate(() =>
       Building3D.instance.model.pickables

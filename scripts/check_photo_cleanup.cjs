@@ -13,7 +13,7 @@ const windowOnly = process.argv.includes("--window-only");
 const prefix = alphaProbe ? "alpha-probe-" : baseline ? "before-" : "";
 const viewer = path.join(
   root,
-  baseline ? "tmp/photo-cleanup-baseline.html" : "9-glenn-viewer.html",
+  baseline ? "tmp/photo-cleanup-baseline.html" : "index.html",
 );
 fs.mkdirSync(out, { recursive: true });
 const helper = buildSync({

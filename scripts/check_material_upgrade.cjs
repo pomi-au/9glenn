@@ -235,7 +235,7 @@ const helper = buildSync({
     const video = page.video();
     try {
       await page.goto(
-        "file://" + path.join(root, "9-glenn-viewer.html") + "#3d",
+        "file://" + path.join(root, "index.html") + "#3d",
       );
       await page.waitForFunction(() => Building3D.instance?.interaction, null, {
         timeout: 60000,
@@ -316,7 +316,7 @@ const helper = buildSync({
     return;
   }
   try {
-    await page.goto("file://" + path.join(root, "9-glenn-viewer.html") + "#3d");
+    await page.goto("file://" + path.join(root, "index.html") + "#3d");
     await page.waitForFunction(
       () => window.Building3D?.instance?.interaction,
       null,

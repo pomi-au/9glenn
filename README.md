@@ -1,14 +1,8 @@
 # 9 Glenn · Clean architectural vectors
 
-Live viewer: **https://pomi-au.github.io/9glenn/**. GitHub Pages publishes the repository root from `codex/webgpu-photorealism`; `.nojekyll` serves the prebuilt files directly. `index.html` is the only viewer entry point. Rebuild the drawings and 3D bundle with `npm run build` before publishing updates. This web build does not generate the omitted offline package or audits.
+Live viewer: **https://pomi-au.github.io/9glenn/**. GitHub Pages publishes `main`, which contains the latest WebGPU model, fountain and unified comparison workspace. `index.html` renders the final interface immediately; `app.js` handles navigation and loads the renderer on demand. Builds version CSS and JavaScript assets to prevent stale code from mixing with a new release. Local audits, the generated ZIP and the former offline HTML duplicate are excluded from Git and publication. Run `npm run build` to rebuild drawings and the versioned renderer before publishing; it does not generate audits or the ZIP.
 
-Published source: committed WebGPU version `2d9631fee50bf929e633e045364a3662636793a6` from the local `codex/webgpu-photorealism` branch. Uncommitted development changes are excluded.
-
-The current interface is rendered directly by `index.html`. `app.js` handles navigation and downloads the WebGPU engine only for 3D, Tour or Compare; ordinary drawing use does not load it. The old layout and runtime layout-conversion module have been removed. Builds version the stylesheet and scripts by content so a new release cannot reuse stale UI code. Run `node scripts/check_startup.cjs` against a local server on port 8147 (or set `VIEWER_BASE_URL`) for blocked-script first paint, lazy loading and retry checks.
-
-This web edition excludes the offline HTML duplicate, drawing-set ZIP, audit folder and comparison report PDF. It retains all eight SVG drawings, the 3D model and the original PDF reference scans. Use **Compare** for the linked three-pane 3D/SVG/PDF view; PDF overlays are also available. The historical audit and offline-package instructions below refer to the complete local project, not this reduced web edition.
-
-Open **9-glenn-viewer.html** for the self-contained, offline viewer, or **index.html** in this folder. All view modes share a compact white-and-blue interface with a single header and toolbar. The canvas fills the workspace; drawing and floor selectors stay in the toolbar, while **Controls** opens floors, layers and display options in a dismissible panel. Drawing details appear on demand and can be closed with × or Escape. It includes ground, first and cellar plans, four elevations, section X–X, and an interactive 3D building mode.
+Open **index.html**, the only viewer entry point. Keep the accompanying assets and scripts beside it; the extracted ZIP works locally without a second HTML viewer. The header has **Compare** and **3D** modes. Compare combines the former Drawings and Compare workspaces: use **3D model**, **SVG**, and **PDF** toggles to show any combination, including a single full-size view. At least one stays visible and your choice is saved locally. The views share pan/zoom and fill the workspace, side by side on desktop and stacked on small screens. The drawing selector includes plans, elevations, section and roof comparisons. Existing drawing links such as `#ground` open `#compare/ground`. In 3D mode, **Controls** opens floor and display options. It includes ground, first and cellar plans, four elevations, section X–X, and an interactive 3D building mode.
 
 The drawings are reconstructed from geometric SVG primitives: straight wall rectangles, window frames, door arcs, curved stairs, roof profiles, round façade arches, fixtures and editable text. No scan or pixel-contour tracing is used as the drawing. The original PDF images are included only for the explicitly enabled reference/overlay views and never enter the exported SVGs.
 
@@ -42,7 +36,7 @@ Photo's texture-atlas compatibility fix keeps leaf cutouts visible when door rel
 
 The path tracer is the experimental upstream WebGPU implementation pinned to revision `010d21099bc9a998364f0f698f5aa2865782130e`, paired with Three.js `0.185.1`. Rendering is capped at one million pixels to limit memory and refinement time; PNG export uses the current canvas dimensions with that photo buffer upscaled as necessary. Geometry still follows the reconstructed building model rather than a photographic scan.
 
-WebGPU requires a compatible browser/device and a secure context. The offline single HTML was verified in desktop Chrome on this Mac using native Apple/Metal WebGPU. If a browser blocks WebGPU for local files, serve the folder on localhost or HTTPS. When WebGPU is unavailable, the viewer explains the requirement and the 2D drawings remain usable; Compare retains the SVG and PDF panes.
+WebGPU requires a compatible browser/device and a secure context. The local index.html viewer was verified in desktop Chrome on this Mac using native Apple/Metal WebGPU. If a browser blocks WebGPU for local files, serve the folder on localhost or HTTPS. When WebGPU is unavailable, the viewer explains the requirement and the 2D drawings remain usable; Compare retains the SVG and PDF panes.
 
 Run `node scripts/check_photo_scene.mjs` for snapshot/clipping checks, `node scripts/check_render_quality.mjs` for rendering lifecycle checks, and `npm run test:webgpu` for actual backend detection, path-traced samples, camera changes, resize, export and cutaway checks. Existing 3D, tour and comparison browser checks use native WebGPU rather than a software WebGL backend.
 
@@ -110,7 +104,7 @@ Section levels are ground 0, first +3,258 mm and cellar −2,572 mm. The 3D mode
 - `model/roof-assembly.js` builds the registered roof planes and their intersections, depth-aware elevations and section cuts. `scripts/roof_spec.py` includes those faces in the shared building spec and SVG authoring; `model/roof-assembly-mesh.js` renders the same faces in 3D.
 - `model/viewer-3d.js` handles the camera, selection and view controls.
 
-The authoring definitions in `scripts/clean_plans.py`, `scripts/clean_elevations.py` , `scripts/building_spec.py` and `model/roof-assembly.js` generate the shared data, standalone SVG exports and offline viewer. Change these definitions, then rebuild. SVG files, `assets/drawings.js`, the bundled 3D script and the standalone HTML are generated outputs. The browser regression test edits a canonical wall/window and checks that both SVG and 3D receive the same new dimension.
+The authoring definitions in `scripts/clean_plans.py`, `scripts/clean_elevations.py` , `scripts/building_spec.py` and `model/roof-assembly.js` generate the shared data, standalone SVG exports and offline viewer. Change these definitions, then rebuild. SVG files, `assets/drawings.js` and the bundled 3D script are generated outputs; `index.html` is the maintained viewer entry point. The browser regression test edits a canonical wall/window and checks that both SVG and 3D receive the same new dimension.
 
 `scripts/door_spec.py` holds the common dining and laundry assembly dimensions used by plan and elevation authoring. The browser regression also edits a shared door transform and verifies its SVG/3D position, orientation and aperture.
 
@@ -118,7 +112,7 @@ The authoring definitions in `scripts/clean_plans.py`, `scripts/clean_elevations
 
 - `drawings/*.svg`: eight standalone clean drawings.
 - `assets/drawing-data.json`: geometry, dimension provenance and checks.
-- `9-glenn-viewer.html`: single-file offline viewer.
+- `index.html`: viewer entry point using the accompanying local assets and scripts.
 - `9-glenn-drawing-set.zip`: portable viewer, drawings and audit.
 - `audit/comparison.html`: self-contained side-by-side source review.
 
@@ -131,7 +125,7 @@ npm ci
 npm run build
 ```
 
-This rebuilds the shared data, all eight SVGs, local 3D bundle, dimensional audit, source comparison and portable HTML/ZIP. No runtime CDN or network connection is needed. WebGPU is required for 3D; the 2D drawing viewer remains available without it. Three.js, polygon-clipping, three-mesh-bvh and three-gpu-pathtracer license notices are included under `assets/licenses/`.
+This rebuilds the shared data, all eight SVGs, local 3D bundle, dimensional audit, source comparison and portable ZIP containing index.html with its local assets. No runtime CDN or network connection is needed. WebGPU is required for 3D; the 2D drawing viewer remains available without it. Three.js, polygon-clipping, three-mesh-bvh and three-gpu-pathtracer license notices are included under `assets/licenses/`.
 
 `node scripts/check_viewer.cjs` and `node scripts/check_3d.cjs` run the browser acceptance checks with Playwright/Chrome. Their Playwright import currently points to the local bundled runtime; adjust it if using another machine. The ZIP includes source and build files as well as the offline deliverables.
 
@@ -139,9 +133,9 @@ Earlier rejected schematic/contour experiments are retained only under the audit
 
 ## Three-pane comparison
 
-Choose **Compare all** to inspect the 3D model, SVG and calibrated PDF together. All eight drawings share linked pan/zoom; drag, scroll or pinch in any pane. **Aligned** uses the matching orthographic projection. **Angled 3D** is available for floor plans and retains the same plan location and scale while showing depth. **Outlines** adds shape edges and is enabled by default. **Fit all** resets the selected drawing; each drawing remembers its view. The section uses the shared section-X registration for a live 3D cut; its cut surfaces are not filled with section hatching.
+Choose **Compare** to inspect the 3D model, SVG and calibrated PDF together. All eight drawings share linked pan/zoom; drag, scroll or pinch in any pane. **Aligned** uses the matching orthographic projection. **Angled 3D** is available for floor plans and retains the same plan location and scale while showing depth. **Outlines** adds shape edges and is enabled by default. **Fit all** resets the selected drawing; each drawing remembers its view. The section uses the shared section-X registration for a live 3D cut; its cut surfaces are not filled with section hatching.
 
-The mode works offline at `9-glenn-viewer.html#compare/first`. Run `node scripts/check_triple.cjs` for projection, linked navigation, outlines, mode switching, mobile and offline checks.
+The mode works offline at `index.html#compare/first`. Run `node scripts/check_triple.cjs` for projection, linked navigation, outlines, mode switching, mobile and offline checks.
 
 ## Four-face black-and-white acceptance report
 
@@ -171,7 +165,7 @@ The front storey band, stepped solid portico bases and plain garage fascia/dark 
 
 The garage stair and wall recheck corrects audit items 1–4: diagonal/rounded step returns, rear-wall contact, the gallery-level third rise, two garage-facing study piers and removal of the extra rear pier. The shared SVG/3D polygons and wall solids are checked by `scripts/check_stairs.cjs`. Undimensioned goings, return radius and pier sizes are scan-derived. See [corrected comparison](audit/garage-review/index.html). The [roof comparison](audit/garage-review/roof.html) identifies the ground SVG’s separately authored dashed roof lines; the actual roof assembly is unchanged by these stair/wall corrections.
 
-**Roof comparison mode:** under **Compare all**, choose **Roof comparison · ground floor** or **Roof comparison · first floor**. The first-floor view defaults to the complete upper roof. The roof dropdown includes All roofs, First-floor roof (all upper), Ground-floor roofs (all lower), and every individual component: main upper hip, projecting upper hip, front gable, garage, portico and rear bay. Both SVG and PDF overlays project the shared 3D surface edges; the obsolete orange roof layer has been removed. Ground-floor drawing dashes also use the shared roof projection. Pan/zoom, PDF overlays, outlines and angled views remain available. Routes are `#compare/roof-ground` and `#compare/roof-first`.
+**Roof comparison mode:** under **Compare**, choose **Roof comparison · ground floor** or **Roof comparison · first floor**. The first-floor view defaults to the complete upper roof. The roof dropdown includes All roofs, First-floor roof (all upper), Ground-floor roofs (all lower), and every individual component: main upper hip, projecting upper hip, front gable, garage, portico and rear bay. Both SVG and PDF overlays project the shared 3D surface edges; the obsolete orange roof layer has been removed. Ground-floor drawing dashes also use the shared roof projection. Pan/zoom, PDF overlays, outlines and angled views remain available. Routes are `#compare/roof-ground` and `#compare/roof-first`.
 
 Service-area geometry corrections join the two 620 mm cupboard leaves into a continuous 1,240 mm opening with no centre wall (equal 55 mm end reveals are inferred), close the linen corner, trim the pantry passage stub and remove the 120 mm FZ/FR wall overhang. The rounded laundry bench is shared counter geometry; its radius/depth and 900 mm height remain inferred. See [corrected PDF comparison](audit/service-walls/index.html). `scripts/check_fixtures.cjs` checks these wall contacts, apertures and bench meshes as well as door clearances.
 

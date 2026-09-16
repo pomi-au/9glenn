@@ -27,7 +27,7 @@ const root = path.join(__dirname, "..");
     page.on("request", (r) => {
       if (/^https?:/.test(r.url())) remote.push(r.url());
     });
-    await page.goto("file://" + path.join(root, "9-glenn-viewer.html") + "#3d");
+    await page.goto("file://" + path.join(root, "index.html") + "#3d");
     await page.waitForFunction(() => window.Building3D?.instance);
     assert.equal(
       await page.evaluate(() => Building3D.instance.renderer.backend.isWebGPUBackend),
@@ -336,7 +336,7 @@ const root = path.join(__dirname, "..");
     );
     // Direct tour route works in the portable, offline viewer too.
     await page.goto(
-      "file://" + path.join(root, "9-glenn-viewer.html") + "#tour",
+      "file://" + path.join(root, "index.html") + "#tour",
     );
     await page.waitForFunction(
       () =>

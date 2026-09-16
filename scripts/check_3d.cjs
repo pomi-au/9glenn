@@ -24,11 +24,11 @@ const {
     const errors = [];
     const remoteRequests = [];
     page.on("request", (r) => {
-      if (/^https?:/.test(r.url())) remoteRequests.push(r.url());
+      if (/^https?:/.test(r.url()) && !r.url().startsWith(process.env.VIEWER_BASE_URL || "file:")) remoteRequests.push(r.url());
     });
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(
-      "file://" + path.join(__dirname, "../index.html") + "#3d",
+      (process.env.VIEWER_BASE_URL || "file://" + path.join(__dirname, "../index.html")) + "#3d",
     );
     await page.waitForFunction(() => window.Building3D?.instance, null, {
       timeout: 30000,
@@ -426,8 +426,8 @@ const {
       false,
     );
     await withControls(() => page.locator("#model-roof").check());
-    await page.locator("#mode-2d").click();
-    await page.waitForSelector("#stage svg", { state: "visible" });
+    await page.locator("#mode-compare").click();
+    await page.waitForSelector("#triple-vector svg", { state: "visible" });
     assert.equal(await page.locator(".nav-item").count(), 8);
     await page.locator("#mode-3d").click();
     await page.waitForSelector("#model-canvas canvas", { state: "visible" });
@@ -436,7 +436,7 @@ const {
     assert.deepEqual(errors, []);
     assert.deepEqual(remoteRequests, []);
     console.log(
-      "PASS offline 3D, fixed-camera model rotation, transformed cut planes, pan/zoom, camera presets, floor isolation, cutaway, labels, dimensions, exploded levels, roof, PNG export, 2D return and mobile layout",
+      "PASS offline 3D, fixed-camera model rotation, transformed cut planes, pan/zoom, camera presets, floor isolation, cutaway, labels, dimensions, exploded levels, roof, PNG export, Compare return and mobile layout",
     );
   } finally {
     await browser.close();

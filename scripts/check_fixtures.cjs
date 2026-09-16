@@ -38,7 +38,7 @@ const area = (polys) =>
     const p = await b.newPage({ viewport: { width: 1300, height: 1000 } });
     const errors = [];
     p.on("pageerror", (e) => errors.push(e.message));
-    await p.goto("file://" + path.resolve("9-glenn-viewer.html") + "#3d");
+    await p.goto("file://" + path.resolve("index.html") + "#3d");
     await p.waitForFunction(() => window.Building3D?.instance);
     const data = await p.evaluate(() => {
       const i = Building3D.instance;

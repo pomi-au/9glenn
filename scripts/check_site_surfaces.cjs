@@ -274,7 +274,7 @@ const helper = buildSync({
       "file://" +
         path.join(
           root,
-          baseline ? "tmp/site-surfaces-baseline.html" : "9-glenn-viewer.html",
+          baseline ? "tmp/site-surfaces-baseline.html" : "index.html",
         ) +
         "#3d",
     );

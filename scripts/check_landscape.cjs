@@ -18,7 +18,7 @@ const {
       }),
       errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto("file://" + path.resolve("9-glenn-viewer.html") + "#3d", {
+    await page.goto("file://" + path.resolve("index.html") + "#3d", {
       waitUntil: "domcontentloaded",
       timeout: 90000,
     });

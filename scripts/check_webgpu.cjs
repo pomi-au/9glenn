@@ -28,7 +28,7 @@ const {
   });
   try {
     await page.goto(
-      "file://" + path.resolve(__dirname, "../9-glenn-viewer.html") + "#3d",
+      "file://" + path.resolve(__dirname, "../index.html") + "#3d",
     );
     await page.waitForFunction(
       () =>

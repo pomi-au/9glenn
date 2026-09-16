@@ -103,7 +103,7 @@ def main():
     parts = [f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>9 Glenn · Corrected doors</title><style>{css}</style>',
              f'<h1>9 Glenn · Corrected doors</h1><p class="note"><strong>{summary}</strong></p><p>{limits}</p>',
              '<p>Both renderers resolve door coordinates from the same SVG primitive tree. Browser checks verified the corrected apertures and confirmed that changing a shared door transform changes both the SVG and 3D geometry. Existing dimension and viewer checks passed.</p>',
-             '<p><a href="../../9-glenn-viewer.html">Open updated viewer</a> · <a href="before-fix/index.html">Original audit before corrections</a></p>',
+             '<p><a href="../../index.html">Open updated viewer</a> · <a href="before-fix/index.html">Original audit before corrections</a></p>',
              '<h2>Resolved findings</h2><table><tr><th>Location</th><th>Correction</th><th>Evidence</th></tr>']
     for record in records:
         if record['finding'] == 'Corrected':

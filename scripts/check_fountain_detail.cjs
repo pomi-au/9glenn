@@ -70,9 +70,26 @@ const helper = buildSync({
             : kind === "tail"
               ? "fountain mermaid scaled curled tail"
               : "fountain pedestal";
-      const mesh = i.model.pickables.find((m) => m.userData.part === part),
+      const mesh =
+          i.model.pickables.find((m) => m.userData.part === part) ||
+          i.model.pickables.find((m) =>
+            m.userData.part?.includes(
+              kind === "face" ? "face with" : "sculpted torso",
+            ),
+          ),
         box = new T.Box3().setFromObject(mesh),
         target = box.getCenter(new T.Vector3());
+      if (mesh.userData.part !== part && (kind === "face" || kind === "body")) {
+        target
+          .copy(mesh.position)
+          .add(
+            new T.Vector3(
+              kind === "face" ? 0.06 : 0.025,
+              kind === "face" ? 1.405 : 1.18,
+              kind === "face" ? 0.025 : -0.025,
+            ),
+          );
+      }
       if (kind === "full") {
         target.y = 0.88;
         target.z -= 0.03;
@@ -249,7 +266,7 @@ const helper = buildSync({
           root,
           baseline
             ? "tmp/fountain-detail-baseline.html"
-            : "9-glenn-viewer.html",
+            : "index.html",
         ) +
         "#3d",
     );

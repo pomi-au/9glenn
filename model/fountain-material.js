@@ -15,7 +15,7 @@ export function fountainBronzeMaterial() {
  * same height field in both live WebGPU and the Photo path tracer. */
 export function fountainDetailMaterials(bronze) {
   const materials = Object.fromEntries(
-    ["face", "body", "scales"].map((kind) => {
+    ["face", "body", "scales", "hair"].map((kind) => {
       const material = bronze.clone();
       Object.assign(material, fountainReliefMaps(kind));
       material.name = `Fountain · green bronze ${kind} relief`;
@@ -27,6 +27,7 @@ export function fountainDetailMaterials(bronze) {
     }),
   );
   return (part, fallback) => {
+    if (part.includes("hair")) return materials.hair;
     if (part.includes("scaled curled tail")) return materials.scales;
     if (part.includes("face with") || part.includes("eyelids and eyes"))
       return materials.face;

@@ -37,7 +37,7 @@ const helper = buildSync({
     await page.goto(
       "file://" +
         path.resolve(
-          baseline ? "tmp/stair-floor-before.html" : "9-glenn-viewer.html",
+          baseline ? "tmp/stair-floor-before.html" : "index.html",
         ) +
         "#3d",
     );

@@ -39,7 +39,12 @@
 
   async function route() {
     const request = ++navigation;
-    const hash = location.hash;
+    let hash = location.hash;
+    if (!["#3d", "#tour"].includes(hash) && !hash.startsWith("#compare/")) {
+      const id = hash.slice(1);
+      hash = `#compare/${window.DRAWINGS.some((d) => d.id === id) ? id : lastDrawing}`;
+      history.replaceState(null, "", hash);
+    }
     const comparing = hash.startsWith("#compare/");
     const touring = hash === "#tour";
     const modeling = hash === "#3d" || touring;
@@ -51,7 +56,6 @@
     document.body.classList.toggle("mode-compare", comparing);
     document.body.classList.toggle("mode-3d", modeling);
     document.body.classList.toggle("mode-tour", touring);
-    $("#mode-2d").setAttribute("aria-pressed", String(!comparing && !modeling));
     $("#mode-3d").setAttribute("aria-pressed", String(modeling));
     $("#mode-compare").setAttribute("aria-pressed", String(comparing));
     if (!comparing && !modeling) {
@@ -74,9 +78,6 @@
     }
   }
 
-  $("#mode-2d").onclick = () => {
-    location.hash = lastDrawing;
-  };
   $("#mode-3d").onclick = () => {
     location.hash = "3d";
   };

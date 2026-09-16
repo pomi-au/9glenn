@@ -6,18 +6,25 @@
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#ffffff" />
     <title>9 Glenn · Ground floor</title>
-    <link rel="stylesheet" href="styles.css?v=882ffecc7e65" />
+    <link rel="stylesheet" href="styles.css?v=49c4b171dc4c" />
     <script src="assets/drawings.js?v=ae5fcdec31e5" defer=""></script>
     <script src="model/drawing-model.js?v=dff165e964c1" defer=""></script>
     <script src="model/linked-pan-zoom.js?v=3dd97dd7a6f2" defer=""></script>
-    <script src="viewer.js?v=4b03b986717e" defer></script>
-    <script src="app.js?v=44e9330aabb1" defer></script>
+    <script src="viewer.js?v=0799322acb16" defer></script>
+    <script src="app.js?v=e53a0f0dbd65" defer></script>
   </head>
-  <body class="app" data-renderer-src="assets/model-3d.js?v=9cd4b41f23a8">
+  <body class="app" data-renderer-src="assets/model-3d.js?v=e42d6caee9fb">
     <script>
       // Select the requested static view before the first paint.
       (() => {
-        const route = location.hash;
+        let route = location.hash;
+        if (
+          !["#3d", "#tour"].includes(route) &&
+          !route.startsWith("#compare/")
+        ) {
+          route = `#compare/${route.slice(1) || "ground"}`;
+          history.replaceState(null, "", route);
+        }
         document.body.classList.toggle(
           "mode-compare",
           route.startsWith("#compare/"),
@@ -54,9 +61,8 @@
         </button>
       </div>
       <div class="view-modes" aria-label="View mode">
-        <button id="mode-2d" aria-pressed="true">Drawings</button
-        ><button id="mode-3d" aria-pressed="false">3D</button
-        ><button id="mode-compare" aria-pressed="false">Compare</button>
+        <button id="mode-compare" aria-pressed="true">Compare</button>
+        <button id="mode-3d" aria-pressed="false">3D</button>
       </div>
       <div class="header-actions">
         <button
@@ -597,6 +603,37 @@
               ><input id="triple-outlines" type="checkbox" checked="" />
               Outlines</label
             >
+          </div>
+          <div
+            class="compare-pane-controls"
+            role="group"
+            aria-label="Visible comparison views"
+          >
+            <span>Show</span>
+            <button
+              class="tool"
+              data-compare-pane="model"
+              aria-controls="triple-model"
+              aria-pressed="true"
+            >
+              3D model
+            </button>
+            <button
+              class="tool"
+              data-compare-pane="svg"
+              aria-controls="triple-vector"
+              aria-pressed="true"
+            >
+              SVG
+            </button>
+            <button
+              class="tool"
+              data-compare-pane="pdf"
+              aria-controls="triple-source"
+              aria-pressed="true"
+            >
+              PDF
+            </button>
           </div>
           <div id="triple-roof-tools" hidden="">
             <label

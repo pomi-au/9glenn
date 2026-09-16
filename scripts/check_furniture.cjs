@@ -5,7 +5,7 @@ const clip=require('polygon-clipping');
 const {chromium}=require('/Users/yinsee/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 (async()=>{const browser=await chromium.launch({headless:true,channel:'chrome',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});try{
 const page=await browser.newPage({viewport:{width:1100,height:800}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto('file://'+path.resolve('9-glenn-viewer.html')+'#3d');await page.waitForFunction(()=>window.Building3D?.instance);
+await page.goto('file://'+path.resolve('index.html')+'#3d');await page.waitForFunction(()=>window.Building3D?.instance);
 const data=await page.evaluate(()=>{const i=Building3D.instance,g=i.data.floors.find(f=>f.id==='ground');return{items:g.source.geometry.filter(g=>g.type==='furniture'),pool:g.source.geometry.find(g=>g.type==='pool'),meshes:i.model.pickables.filter(m=>m.userData.kind==='furniture').map(m=>({id:m.userData.furnitureId,finite:Array.from(m.geometry.attributes.position.array).every(Number.isFinite)}))};});
 assert.equal(data.items.length,11);assert.equal(data.items.filter(i=>i.form==='chair').length,6);assert.equal(data.items.filter(i=>i.form==='lounger').length,2);
 for(const [n,item] of data.items.entries()){

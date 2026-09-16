@@ -1,32 +1,12 @@
-"""Create an offline, single-file viewer and a portable source/drawing bundle."""
-import base64
-import json
+"""Package index.html and its local assets as the only viewer entry point."""
 from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-html = (ROOT / 'index.html').read_text()
-css = (ROOT / 'styles.css').read_text()
 script_paths = [
     'assets/drawings.js', 'model/drawing-model.js',
-    'assets/model-3d.js', 'model/linked-pan-zoom.js', 'viewer.js',
+    'assets/model-3d.js', 'model/linked-pan-zoom.js', 'viewer.js', 'app.js',
 ]
-images = {
-    str(page): 'data:image/jpeg;base64,' + base64.b64encode(
-        (ROOT / f'assets/source-{page}.jpg').read_bytes()
-    ).decode('ascii')
-    for page in range(1, 8)
-}
-html = html.replace('<link rel="stylesheet" href="styles.css">', f'<style>{css}</style>')
-for path in script_paths:
-    html = html.replace(f'<script src="{path}" defer></script>', '')
-html = html.replace('src="assets/source-4.jpg"', f'src="{images["4"]}"')
-script = 'window.SOURCE_IMAGES = ' + json.dumps(images) + ';\n'
-script += '\n'.join((ROOT / path).read_text() for path in script_paths)
-script = script.replace('</script', '<\\/script')
-html = html.replace('</body>', f'<script>{script}</script>\n</body>')
-standalone = ROOT / '9-glenn-viewer.html'
-standalone.write_text(html)
 
 source_files = [
     'README.md', 'assets/drawing-data.json', 'assets/building-spec.json',
@@ -41,16 +21,19 @@ build_scripts = [
     'check_swimming.cjs', 'check_tour.cjs', 'check_stairs.cjs', 'check_roof.mjs', 'check_door_interaction.cjs', 'check_door_motion.mjs',
     'build_all.py', 'build_drawings.py', 'building_spec.py', 'fixture_spec.py', 'pool_spec.py', 'site_spec.py', 'build_pool_report.py', 'door_spec.py', 'opening_spec.py', 'stair_spec.py', 'guard_spec.py', 'clean_plans.py',
     'clean_elevations.py', 'vector_drawing.py', 'validate.py',
-    'build_comparison.py', 'build_door_audit.py', 'package.py', 'check_viewer.cjs', 'check_3d.cjs', 'check_doors.py', 'check_openings.cjs', 'check_arches.cjs', 'check_wall_faces.mjs', 'check_guards.cjs', 'check_comparison.cjs', 'check_linen.cjs', 'check_triple.cjs',
+    'version_web_assets.mjs', 'build_comparison.py', 'build_door_audit.py', 'package.py', 'check_viewer.cjs', 'check_3d.cjs', 'check_doors.py', 'check_openings.cjs', 'check_arches.cjs', 'check_wall_faces.mjs', 'check_guards.cjs', 'check_comparison.cjs', 'check_linen.cjs', 'check_triple.cjs',
 ]
 paths = {
-    standalone,
     *(ROOT / name for name in source_files),
     *(ROOT / 'scripts' / name for name in build_scripts),
     *(ROOT / 'model').glob('*.js'),
     *(ROOT / 'assets').glob('source-*.jpg'),
     *(ROOT / 'assets/licenses').glob('*'),
     *(p for p in (ROOT / 'assets/textures').rglob('*') if p.is_file()),
+    *(p for p in (ROOT / 'assets/models').rglob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/fountain-reference').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    *(p for p in (ROOT / 'audit/loft-floors').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    *(ROOT / 'scripts' / name for name in ['build_fountain_anatomy.mjs', 'check_fountain_anatomy.mjs', 'check_fountain_reference_tail.mjs', 'check_fountain_reference.cjs', 'check_slab_finish.mjs', 'check_floor_gaps.mjs', 'check_loft_floors.cjs']),
     *(ROOT / 'model').glob('*.wgsl'),
     ROOT / 'scripts/check_webgpu.cjs',
     ROOT / 'scripts/check_site_surface_materials.mjs',
@@ -121,5 +104,5 @@ paths = {
 with zipfile.ZipFile(ROOT / '9-glenn-drawing-set.zip', 'w', zipfile.ZIP_DEFLATED) as bundle:
     for path in sorted(paths):
         bundle.write(path, '9-glenn/' + str(path.relative_to(ROOT)))
-print(f'Standalone HTML: {standalone.stat().st_size:,} bytes')
+print('Viewer entry point: index.html (keep its local assets alongside it)')
 print('Created ZIP with offline 2D/3D viewer, 8 SVGs, source code, shared data and audit.')

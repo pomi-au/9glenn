@@ -18,6 +18,14 @@ function castGrain(u, v) {
 
 export function fountainReliefHeight(kind, u, v) {
   const grain = castGrain(u, v);
+  if (kind === "hair") {
+    const flow = u + 0.025 * Math.sin(TAU * v);
+    return (
+      0.00025 * Math.cos(TAU * flow * 6) +
+      0.000065 * Math.cos(TAU * flow * 18) +
+      grain * 0.000008
+    );
+  }
   if (kind !== "scales") return grain * (kind === "face" ? 0.000018 : 0.000035);
   // Two columns / four staggered rows per seamless 48 x 56 mm tile.
   // Each shield has a gently domed field and a narrow rounded overlapping lip.
@@ -40,12 +48,12 @@ export function fountainReliefHeight(kind, u, v) {
 
 export function fountainReliefMaps(kind) {
   if (cache.has(kind)) return cache.get(kind);
-  if (!["face", "body", "scales"].includes(kind))
+  if (!["face", "body", "scales", "hair"].includes(kind))
     throw new Error(`Unknown fountain relief: ${kind}`);
   const size = 256;
   const width = kind === "scales" ? 0.048 : 0.032;
-  const height = kind === "scales" ? 0.056 : 0.032;
-  const range = kind === "scales" ? 0.0048 : 0.00014;
+  const height = kind === "scales" ? 0.056 : kind === "hair" ? 0.064 : 0.032;
+  const range = kind === "scales" ? 0.0048 : kind === "hair" ? 0.0007 : 0.00014;
   const values = new Float32Array(size * size);
   for (let y = 0; y < size; y++)
     for (let x = 0; x < size; x++)

@@ -11,7 +11,7 @@ const baseline = process.argv.includes("--baseline");
 const prefix = baseline ? "before-" : "";
 const viewer = path.join(
   root,
-  baseline ? "tmp/door-relief-baseline.html" : "9-glenn-viewer.html",
+  baseline ? "tmp/door-relief-baseline.html" : "index.html",
 );
 fs.mkdirSync(out, { recursive: true });
 const helper = buildSync({

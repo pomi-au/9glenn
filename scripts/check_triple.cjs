@@ -14,15 +14,18 @@ const {
     const p = await b.newPage({ viewport: { width: 1600, height: 1000 } }),
       errors = [],
       network = [];
-    p.on("pageerror", (e) => errors.push(e.message));
+    p.on("pageerror", (e) => { errors.push(e.message); console.error("PAGE ERROR", e.message); });
     p.on("request", (r) => {
-      if (/^https?:/.test(r.url())) network.push(r.url());
+      if (/^https?:/.test(r.url()) && !r.url().startsWith(process.env.VIEWER_BASE_URL || "file:")) network.push(r.url());
     });
-    await p.goto("file://" + path.resolve("index.html") + "#first");
-    await p.locator("#mode-compare").click();
+    await p.goto((process.env.VIEWER_BASE_URL || "file://" + path.resolve("index.html")) + "#first");
     await p.waitForFunction(() => window.TripleView?.instance?.drawing);
+    assert.equal(await p.locator("#mode-2d").count(), 0);
+    assert.equal(new URL(p.url()).hash, "#compare/first");
     assert.equal(
-      await p.evaluate(() => TripleView.instance.renderer?.backend.isWebGPUBackend),
+      await p.evaluate(
+        () => TripleView.instance.renderer?.backend.isWebGPUBackend,
+      ),
       true,
       "drawing and roof comparisons use the WebGPU backend",
     );
@@ -31,10 +34,19 @@ const {
       // Pane resizing is applied on the next ResizeObserver/render cycle.
       await p.waitForFunction(() => {
         const view = TripleView.instance.view;
-        const roots = [...document.querySelectorAll("#triple-view .triple-surface>svg")];
-        return roots.length === 3 && roots.every((svg) =>
-          svg.getAttribute("viewBox").split(/\s+/).map(Number).every((n, index) =>
-            Math.abs(n - view[index]) < 0.01));
+        const roots = [
+          ...document.querySelectorAll("#triple-view .triple-surface>svg"),
+        ];
+        return (
+          roots.length === 3 &&
+          roots.every((svg) =>
+            svg
+              .getAttribute("viewBox")
+              .split(/\s+/)
+              .map(Number)
+              .every((n, index) => Math.abs(n - view[index]) < 0.01),
+          )
+        );
       });
       const result = await p.evaluate(() => {
         const i = TripleView.instance,
@@ -82,15 +94,28 @@ const {
           group: instance.clipping.isClippingGroup,
           includesModel: instance.model.root.parent === instance.clipping,
           planes: instance.clipping.clippingPlanes.map((plane) => [
-            ...plane.normal.toArray(), plane.constant,
+            ...plane.normal.toArray(),
+            plane.constant,
           ]),
           expected: instance.basis.clip
-            ? [[...instance.basis.clip.normal.toArray(), instance.basis.clip.constant]]
+            ? [
+                [
+                  ...instance.basis.clip.normal.toArray(),
+                  instance.basis.clip.constant,
+                ],
+              ]
             : [],
         };
       });
-      assert(clipState.group && clipState.includesModel, "WebGPU clipping contains comparison model");
-      assert.deepEqual(clipState.planes, clipState.expected, "section clipping follows the selected projection");
+      assert(
+        clipState.group && clipState.includesModel,
+        "WebGPU clipping contains comparison model",
+      );
+      assert.deepEqual(
+        clipState.planes,
+        clipState.expected,
+        "section clipping follows the selected projection",
+      );
       assert.equal(await p.locator("#triple-error").isVisible(), false);
     }
     for (const id of ["roof-ground", "roof-first"]) {
@@ -247,10 +272,8 @@ const {
       await aligned();
       assert.equal(await p.locator("#triple-drawing").inputValue(), id);
     }
-    await p.locator("#mode-2d").click();
-    await p.locator("#stage").waitFor({ state: "visible" });
-    assert.equal(new URL(p.url()).hash, "#first");
-    await p.locator("#mode-compare").click();
+    await p.locator("#triple-drawing").selectOption("first");
+    assert.equal(new URL(p.url()).hash, "#compare/first");
     await p.waitForFunction(() => !TripleView.instance.roofMode);
     assert.equal(await p.locator("#triple-roof-tools").isVisible(), false);
     await p.locator("#triple-drawing").selectOption("first");
@@ -312,8 +335,6 @@ const {
     assert.ok(Math.abs(angled[0]) < 1e-6 && Math.abs(angled[1]) < 1e-6);
     await p.locator("#triple-aligned").click();
     await aligned();
-    await p.locator("#mode-2d").click();
-    await p.locator("#stage").waitFor({ state: "visible" });
     await p.locator("#mode-3d").click();
     await p.waitForFunction(() => window.Building3D?.instance);
     assert.equal(await p.locator("#model-canvas").isVisible(), true);
@@ -333,22 +354,132 @@ const {
     await aligned();
     assert.deepEqual(errors, []);
     assert.deepEqual(network, []);
+    // Every non-empty pane combination fills the workspace and navigates without
+    // depending on the (possibly hidden) model surface.
+    const paneNames = ["model", "svg", "pdf"];
+    async function showPanes(wanted) {
+      for (const name of wanted) {
+        const button = p.locator(`[data-compare-pane="${name}"]`);
+        if ((await button.getAttribute("aria-pressed")) === "false")
+          await button.click();
+      }
+      for (const name of paneNames.filter((name) => !wanted.includes(name))) {
+        const button = p.locator(`[data-compare-pane="${name}"]`);
+        if ((await button.getAttribute("aria-pressed")) === "true")
+          await button.click();
+      }
+      await aligned();
+    }
+    for (const width of [1600, 600]) {
+      await p.setViewportSize({ width, height: 1000 });
+      for (const wanted of [
+        ["model"],
+        ["svg"],
+        ["pdf"],
+        ["model", "svg"],
+        ["model", "pdf"],
+        ["svg", "pdf"],
+        paneNames,
+      ]) {
+        await showPanes(wanted);
+        assert.equal(
+          await p.locator(".triple-panes figure:visible").count(),
+          wanted.length,
+        );
+        const rects = await p
+          .locator(".triple-panes figure:visible")
+          .evaluateAll((nodes) =>
+            nodes.map((n) => {
+              const b = n.getBoundingClientRect();
+              return { width: b.width, height: b.height };
+            }),
+          );
+        assert.ok(rects.every((r) => r.width > 100 && r.height > 100));
+        assert.ok(
+          rects.every(
+            (r) =>
+              Math.abs(r.width - rects[0].width) < 2 &&
+              Math.abs(r.height - rects[0].height) < 2,
+          ),
+        );
+        if (wanted.length === 1)
+          assert(
+            await p.locator(`[data-compare-pane="${wanted[0]}"]`).isDisabled(),
+          );
+        const surface = p
+          .locator(".triple-panes figure:visible .triple-surface > svg")
+          .first();
+        const start = await p.evaluate(() => TripleView.instance.view);
+        await surface.focus();
+        await p.keyboard.press("+");
+        const zoomed = await p.evaluate(() => TripleView.instance.view);
+        assert.ok(zoomed[2] < start[2]);
+        await p.keyboard.press("ArrowRight");
+        assert.ok(
+          (await p.evaluate(() => TripleView.instance.view))[0] > zoomed[0],
+        );
+        await aligned();
+        await p.locator("#triple-fit").click();
+      }
+    }
+    await showPanes(["svg", "pdf"]);
+    await p.screenshot({ path: "tmp/compare-selected-mobile.png" });
+    await p.setViewportSize({ width: 1600, height: 1000 });
+    await aligned();
+    await p.locator("#triple-fit").click();
+    const beforeButtonZoom = await p.evaluate(
+      () => TripleView.instance.view[2],
+    );
+    await p.locator("#triple-in").click();
+    assert.ok(
+      (await p.evaluate(() => TripleView.instance.view[2])) < beforeButtonZoom,
+    );
+    await p.screenshot({ path: "tmp/compare-selected-desktop.png" });
+    await p.reload();
+    await p.waitForFunction(() => window.TripleView?.instance?.drawing);
+    await aligned();
+    assert.equal(
+      await p
+        .locator('[data-compare-pane="model"]')
+        .getAttribute("aria-pressed"),
+      "false",
+    );
+    assert.equal(await p.locator(".triple-panes figure:visible").count(), 2);
+    await p.evaluate(() => {
+      location.hash = "ground";
+    });
+    await p.waitForFunction(
+      () =>
+        location.hash === "#compare/ground" &&
+        TripleView.instance.drawing.id === "ground",
+    );
+    await aligned();
+    assert.deepEqual(errors, []);
     const unsupported = await b.newPage();
     await unsupported.addInitScript(() => {
       Object.defineProperty(navigator, "gpu", { value: undefined });
     });
-    await unsupported.goto("file://" + path.resolve("index.html") + "#compare/ground");
-    await unsupported.waitForFunction(() => window.TripleView?.instance?.drawing);
-    assert.equal(await unsupported.locator("#triple-model canvas").count(), 0,
-      "missing WebGPU never creates a fallback canvas");
+    await unsupported.goto(
+      (process.env.VIEWER_BASE_URL || "file://" + path.resolve("index.html")) + "#compare/ground",
+    );
+    await unsupported.waitForFunction(
+      () => window.TripleView?.instance?.drawing,
+    );
+    assert.equal(
+      await unsupported.locator("#triple-model canvas").count(),
+      0,
+      "missing WebGPU never creates a fallback canvas",
+    );
     assert(await unsupported.locator("#triple-error").isVisible());
     assert.equal(await unsupported.locator("#triple-vector > svg").count(), 1);
     assert.equal(await unsupported.locator("#triple-source > svg").count(), 1);
     await unsupported.locator("#triple-drawing").selectOption("first");
-    await unsupported.waitForFunction(() => TripleView.instance.drawing.id === "first");
+    await unsupported.waitForFunction(
+      () => TripleView.instance.drawing.id === "first",
+    );
     await unsupported.close();
     console.log(
-      "PASS WebGPU backend and section clipping; eight drawing projections and both roof modes; exact roof-edge projection, component isolation, PDF overlay, three-way pan/zoom, angled views, fit, mode switching, mobile resize, deep-link reload, offline loading and linked drawings without a GPU.",
+      "PASS WebGPU backend and section clipping; eight drawing projections and both roof modes; exact roof-edge projection, component isolation, PDF overlay, three-way pan/zoom, angled views, fit, mode switching, mobile resize, deep-link reload, all seven pane combinations, saved selections, offline loading and linked drawings without a GPU.",
     );
   } finally {
     await b.close();

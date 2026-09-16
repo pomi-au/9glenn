@@ -11,7 +11,7 @@ const baseline = process.argv.includes("--baseline");
 const prefix = baseline ? "before-" : "";
 const viewerPath = baseline
   ? path.join(root, "tmp/reflections-baseline.html")
-  : path.join(root, "9-glenn-viewer.html");
+  : path.join(root, "index.html");
 fs.mkdirSync(out, { recursive: true });
 const helper = buildSync({
   stdin: {

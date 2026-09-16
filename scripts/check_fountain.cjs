@@ -12,7 +12,7 @@ const baseline = process.argv.includes("--baseline"),
 const waterOnly = process.argv.includes("--water-only");
 const viewer = path.join(
   root,
-  baseline ? "tmp/fountain-baseline.html" : "9-glenn-viewer.html",
+  baseline ? "tmp/fountain-baseline.html" : "index.html",
 );
 fs.mkdirSync(out, { recursive: true });
 const helper = buildSync({

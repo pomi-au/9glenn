@@ -7,6 +7,7 @@ import { awaitArchitecturalTextures } from "./generated-textures.js";
 import { awaitDoorReliefMaterials } from "./door-relief-material.js";
 import { awaitSiteSurfaceMaterials } from "./site-surface-material.js";
 import { createPlanarOptics } from "./planar-optics.js";
+import { mountComparePanes } from "./compare-panes.js";
 
 function projection(data, drawing) {
   const ground = data.floors.find((f) => f.id === "ground");
@@ -215,8 +216,9 @@ async function create(section) {
     roofOverlay,
     active = false,
     angled = false;
+  const panes = mountComparePanes(section, render);
   function dimensions() {
-    const box = $("#triple-model").getBoundingClientRect();
+    const box = panes.firstSurface().getBoundingClientRect();
     return {
       width: box.width,
       height: box.height,
@@ -258,7 +260,7 @@ async function create(section) {
     v[1] = state.y * compression() - v[3] / 2;
     return v;
   }
-  const control = window.LinkedPanZoom.bind(input, {
+  window.LinkedPanZoom.bind(input, {
     getView: inputView,
     setView: ([x, y, w, h]) =>
       setView([x, (y + h / 2) / compression() - h / 2, w, h]),
@@ -284,7 +286,7 @@ async function create(section) {
     for (const svg of [vector, source])
       svg.setAttribute("viewBox", v.join(" "));
     input.setAttribute("viewBox", inputView().join(" "));
-    renderer?.setSize(size.width, size.height, false);
+    if (panes.modelVisible()) renderer?.setSize(size.width, size.height, false);
     const centre = basis.point(state.x, state.y);
     const normal =
       angled && basis.floor
@@ -300,9 +302,11 @@ async function create(section) {
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld(true);
     clipping.clippingPlanes = basis.clip ? [basis.clip] : [];
-    optics?.update(camera);
-    renderer?.render(scene, camera);
-    if (optics?.needsUpdate) opticalFrame = requestAnimationFrame(render);
+    if (panes.modelVisible()) {
+      optics?.update(camera);
+      renderer?.render(scene, camera);
+      if (optics?.needsUpdate) opticalFrame = requestAnimationFrame(render);
+    }
     $("#triple-zoom").textContent =
       `${Math.round((fitWidth() / state.width) * 100)}%`;
   }
@@ -450,8 +454,13 @@ async function create(section) {
     updateButtons();
     render();
   };
-  $("#triple-in").onclick = () => control.zoom(1.25);
-  $("#triple-out").onclick = () => control.zoom(0.8);
+  function zoom(factor) {
+    const zoom = fitWidth() / state.width;
+    state.width = fitWidth() / Math.max(0.35, Math.min(15, zoom * factor));
+    render();
+  }
+  $("#triple-in").onclick = () => zoom(1.25);
+  $("#triple-out").onclick = () => zoom(0.8);
   $("#triple-fit").onclick = reset;
   $("#triple-roof-component").onchange = () => open(selection, true);
   $("#triple-roof-overlay").onchange = (event) => {
@@ -463,7 +472,9 @@ async function create(section) {
     optics?.invalidate();
     render();
   };
-  new ResizeObserver(render).observe($("#triple-model"));
+  const resize = new ResizeObserver(render);
+  for (const surface of section.querySelectorAll(".triple-surface"))
+    resize.observe(surface);
   return {
     open,
     render,

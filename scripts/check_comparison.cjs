@@ -59,7 +59,7 @@ const {
     assert.deepEqual(await view(pair.last()), initial);
     await page.screenshot({ path: "tmp/comparison-mobile.png" });
     await page.setViewportSize({ width: 1500, height: 1000 });
-    await page.goto("file://" + path.resolve("9-glenn-viewer.html") + "#first");
+    await page.goto("file://" + path.resolve("index.html") + "#first");
     await page.locator("#reference-button").click();
     await page.waitForTimeout(150);
     const svg = page.locator("#stage>svg"),

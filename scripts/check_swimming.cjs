@@ -22,7 +22,7 @@ const root = path.resolve(__dirname, "..");
       console.error(e.message);
     });
     await page.goto(
-      "file://" + path.join(root, "9-glenn-viewer.html") + "#tour",
+      "file://" + path.join(root, "index.html") + "#tour",
     );
     await page.waitForFunction(
       () =>

@@ -28,7 +28,7 @@ const {
       if (/^https?:/.test(request.url())) remote.push(request.url());
     });
     await page.goto(
-      "file://" + path.resolve(__dirname, "../9-glenn-viewer.html") + "#3d",
+      "file://" + path.resolve(__dirname, "../index.html") + "#3d",
       { timeout: 60000 },
     );
     await page.waitForFunction(() => window.Building3D?.instance, null, {

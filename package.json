@@ -25,7 +25,9 @@
     "test:fountain": "node scripts/check_fountain_sculpture.mjs && node scripts/check_fountain_flow.mjs && node scripts/check_fountain_waves.mjs && node scripts/check_fountain.cjs",
     "test:stair-floor-finish": "node scripts/check_stair_floor_finish.cjs",
     "test:fountain-detail": "node scripts/check_fountain_relief.mjs && node scripts/check_fountain_detail.cjs",
-    "test:site-surfaces": "node scripts/check_site_surface_materials.mjs && node scripts/check_site_surfaces.cjs"
+    "test:site-surfaces": "node scripts/check_site_surface_materials.mjs && node scripts/check_site_surfaces.cjs",
+    "test:fountain-reference": "node scripts/check_fountain_anatomy.mjs && node scripts/check_fountain_reference_tail.mjs && node scripts/check_fountain_sculpture.mjs && node scripts/check_fountain_relief.mjs && node scripts/check_fountain_flow.mjs && node scripts/check_fountain_waves.mjs && node scripts/check_fountain_reference.cjs",
+    "test:floor-finishes": "node scripts/check_slab_finish.mjs && node scripts/check_floor_gaps.mjs && node scripts/check_loft_floors.cjs"
   },
   "dependencies": {
     "polygon-clipping": "0.15.7",

@@ -11,7 +11,7 @@ const {
   });
   try {
     const page = await browser.newPage();
-    await page.goto("file://" + path.resolve("9-glenn-viewer.html") + "#3d");
+    await page.goto("file://" + path.resolve("index.html") + "#3d");
     await page.waitForFunction(() => window.Building3D?.instance);
     const result = await page.evaluate(() => {
       const i = Building3D.instance,
