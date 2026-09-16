@@ -1,0 +1,125 @@
+"""Create an offline, single-file viewer and a portable source/drawing bundle."""
+import base64
+import json
+from pathlib import Path
+import zipfile
+
+ROOT = Path(__file__).resolve().parents[1]
+html = (ROOT / 'index.html').read_text()
+css = (ROOT / 'styles.css').read_text()
+script_paths = [
+    'assets/drawings.js', 'model/drawing-model.js',
+    'assets/model-3d.js', 'model/linked-pan-zoom.js', 'viewer.js',
+]
+images = {
+    str(page): 'data:image/jpeg;base64,' + base64.b64encode(
+        (ROOT / f'assets/source-{page}.jpg').read_bytes()
+    ).decode('ascii')
+    for page in range(1, 8)
+}
+html = html.replace('<link rel="stylesheet" href="styles.css">', f'<style>{css}</style>')
+for path in script_paths:
+    html = html.replace(f'<script src="{path}" defer></script>', '')
+html = html.replace('src="assets/source-4.jpg"', f'src="{images["4"]}"')
+script = 'window.SOURCE_IMAGES = ' + json.dumps(images) + ';\n'
+script += '\n'.join((ROOT / path).read_text() for path in script_paths)
+script = script.replace('</script', '<\\/script')
+html = html.replace('</body>', f'<script>{script}</script>\n</body>')
+standalone = ROOT / '9-glenn-viewer.html'
+standalone.write_text(html)
+
+source_files = [
+    'README.md', 'assets/drawing-data.json', 'assets/building-spec.json',
+    'audit/comparison.html', 'audit/dimension-audit.json',
+    'package.json', 'package-lock.json', 'index.html', 'styles.css',
+    *script_paths,
+]
+build_scripts = [
+    'furniture_spec.py', 'check_furniture.cjs', 'check_finishes.cjs',
+    'check_landscape.cjs', 'build_landscape_report.py', 'check_photo_front.cjs', 'check_cornices.mjs', 'build_cornices.mjs', 'cornice_spec.py', 'render_pdf_elevations.py', 'elevation-audit-render.js', 'capture_elevation_match.cjs', 'analyse_elevation_match.py', 'build_elevation_match_report.py', 'check_elevation_match.py',
+    'build_roofs.mjs', 'build_roof_audit.py', 'roof_spec.py', 'check_roof_assembly.mjs', 'check_roof_views.cjs', 'check_fixtures.cjs', 'check_pool.cjs',
+    'check_swimming.cjs', 'check_tour.cjs', 'check_stairs.cjs', 'check_roof.mjs', 'check_door_interaction.cjs', 'check_door_motion.mjs',
+    'build_all.py', 'build_drawings.py', 'building_spec.py', 'fixture_spec.py', 'pool_spec.py', 'site_spec.py', 'build_pool_report.py', 'door_spec.py', 'opening_spec.py', 'stair_spec.py', 'guard_spec.py', 'clean_plans.py',
+    'clean_elevations.py', 'vector_drawing.py', 'validate.py',
+    'build_comparison.py', 'build_door_audit.py', 'package.py', 'check_viewer.cjs', 'check_3d.cjs', 'check_doors.py', 'check_openings.cjs', 'check_arches.cjs', 'check_wall_faces.mjs', 'check_guards.cjs', 'check_comparison.cjs', 'check_linen.cjs', 'check_triple.cjs',
+]
+paths = {
+    standalone,
+    *(ROOT / name for name in source_files),
+    *(ROOT / 'scripts' / name for name in build_scripts),
+    *(ROOT / 'model').glob('*.js'),
+    *(ROOT / 'assets').glob('source-*.jpg'),
+    *(ROOT / 'assets/licenses').glob('*'),
+    *(p for p in (ROOT / 'assets/textures').rglob('*') if p.is_file()),
+    *(ROOT / 'model').glob('*.wgsl'),
+    ROOT / 'scripts/check_webgpu.cjs',
+    ROOT / 'scripts/check_site_surface_materials.mjs',
+    ROOT / 'scripts/check_site_surfaces.cjs',
+    *(p for p in (ROOT / 'audit/site-surfaces').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    ROOT / 'scripts/check_photo_scene.mjs',
+    ROOT / 'scripts/check_fountain_sculpture.mjs',
+    ROOT / 'scripts/check_fountain_relief.mjs',
+    ROOT / 'scripts/check_fountain_detail.cjs',
+    *(p for p in (ROOT / 'audit/fountain-detail').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    ROOT / 'scripts/check_fountain_flow.mjs',
+    ROOT / 'scripts/check_fountain_waves.mjs',
+    ROOT / 'scripts/check_fountain.cjs',
+    ROOT / 'scripts/check_stair_floor_finish.cjs',
+    *(p for p in (ROOT / 'audit/fountain').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    *(p for p in (ROOT / 'audit/mermaid').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    *(p for p in (ROOT / 'audit/stair-floor-finish').rglob('*') if p.is_file() and not p.name.startswith('failure')),
+    ROOT / 'scripts/check_photo_denoiser.mjs',
+    ROOT / 'scripts/check_photo_foliage.mjs',
+    ROOT / 'scripts/check_photo_cleanup.cjs',
+    *(p for p in (ROOT / 'audit/photo-cleanup').rglob('*') if p.is_file() and p.name != 'failure.png'),
+    ROOT / 'scripts/check_render_quality.mjs',
+    ROOT / 'scripts/check_environment.cjs',
+    ROOT / 'scripts/check_environment_physics.mjs',
+    ROOT / 'scripts/check_grass.mjs',
+    ROOT / 'scripts/check_pointer_interaction.mjs',
+    ROOT / 'scripts/check_texture_hit.mjs',
+    ROOT / 'scripts/check_material_upgrade.cjs',
+    ROOT / 'scripts/check_glazing.mjs',
+    ROOT / 'scripts/check_door_relief.mjs',
+    ROOT / 'scripts/check_door_relief_material.mjs',
+    ROOT / 'scripts/check_door_relief.cjs',
+    *(p for p in (ROOT / 'audit/door-relief').rglob('*') if p.is_file() and p.name != 'failure.png'),
+    ROOT / 'scripts/check_planar_optics.mjs',
+    ROOT / 'scripts/check_reflections.cjs',
+    *(p for p in (ROOT / 'audit/reflections').rglob('*') if p.is_file() and p.name != 'failure.png'),
+    *(p for p in (ROOT / 'audit/material-upgrade').rglob('*') if p.is_file() and p.name != 'failure.png'),
+    *(p for p in (ROOT / 'audit/interaction').glob('*') if p.is_file() and p.name != 'failure.png'),
+    *(p for p in (ROOT / 'audit/webgpu').glob('*') if p.is_file() and p.name != 'failure.png'),
+    *(ROOT / 'drawings').glob('*.svg'),
+    *(ROOT / 'audit/arches').glob('*'),
+    *(ROOT / 'audit/opening-fixes').glob('*'),
+    *(ROOT / 'audit/door-interaction').glob('*'),
+    *(ROOT / 'audit/fixture-fixes').glob('*'),
+    *(ROOT / 'audit/pool').glob('*'),
+    *(ROOT / 'audit/landscape').glob('*'),
+    *(ROOT / 'audit/furniture').glob('*'),
+    *(ROOT / 'audit/finishes').glob('*'),
+    *(ROOT / 'audit/tour').glob('*'),
+    *(ROOT / 'audit/garage-junction').glob('*'),
+    *(p for p in (ROOT / 'audit/garage-review').glob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/garage-door-wall').glob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/service-walls').glob('*') if p.is_file()),
+    *(ROOT / 'audit/garage-rear').glob('*'),
+    *(ROOT / 'audit/openings-recheck').glob('*'),
+    *(ROOT / 'audit/doors').glob('*.html'),
+    *(ROOT / 'audit/doors').glob('*.json'),
+    *(ROOT / 'audit/doors').glob('*.md'),
+    *(ROOT / 'audit/doors').glob('*.png'),
+    *(ROOT / 'audit/doors/before-fix').glob('*'),
+    *(p for p in (ROOT / 'audit/stairs').rglob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/roofs').rglob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/elevation-match').rglob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/cornices').rglob('*') if p.is_file()),
+    *(p for p in (ROOT / 'audit/photo-reference').rglob('*') if p.is_file()),
+    ROOT / 'output/pdf/9-glenn-four-face-comparison.pdf',
+}
+with zipfile.ZipFile(ROOT / '9-glenn-drawing-set.zip', 'w', zipfile.ZIP_DEFLATED) as bundle:
+    for path in sorted(paths):
+        bundle.write(path, '9-glenn/' + str(path.relative_to(ROOT)))
+print(f'Standalone HTML: {standalone.stat().st_size:,} bytes')
+print('Created ZIP with offline 2D/3D viewer, 8 SVGs, source code, shared data and audit.')

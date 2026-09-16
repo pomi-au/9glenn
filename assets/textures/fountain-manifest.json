@@ -1,0 +1,8 @@
+{
+  "asset": "fountain-bronze.png",
+  "generator": "Built-in ChatGPT image generation",
+  "date": "2026-09-16",
+  "purpose": "Mermaid fountain green bronze patina",
+  "prompt": "Use case: photorealistic-natural. Asset type: seamless square PBR base-colour texture for a detailed outdoor bronze mermaid fountain sculpture. Generate a flat orthographic material scan filling entire image edge to edge, no object, no sculpture, no perspective, no baked highlights/shadows, no text. Aged green bronze verdigris surface: restrained irregular mottled sage green and deep oxidized olive-green patina, tiny patches of warm dark bronze metal beneath, fine cast-metal pores and subtle mineral stippling. Realistic small-scale uneven weathering, low contrast so carved features remain legible, no large cracks, no dramatic flaky damage. Uniform diffuse illumination, tileable borders, 1024 square. This is a material albedo map only.",
+  "derivatives": "Runtime normal, bump and roughness derived from generated luminance; artistic surface relief, not measured scan data."
+}

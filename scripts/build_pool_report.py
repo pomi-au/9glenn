@@ -1,0 +1,26 @@
+"""Photo-reference report for the corrected pool and fountain."""
+import base64, json
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'audit/pool'
+def image(name):
+    return 'data:image/png;base64,'+base64.b64encode((OUT/name).read_bytes()).decode()
+def pair(a,ac,b,bc):
+    return '<div class="pair">'+''.join(f'<figure><figcaption>{label}</figcaption><img src="{image(name)}" alt="{label}"></figure>' for name,label in [(a,ac),(b,bc)])+'</div>'
+page='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>9 Glenn · Pool correction</title><style>*{box-sizing:border-box}body{margin:0;background:#f5f5f0;color:#253630;font:16px/1.55 system-ui}main{max-width:1500px;margin:auto;padding:36px}h1{font-size:34px;line-height:1.15}h2{margin-top:40px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;background:white;padding:16px;border:1px solid #d5dcd5}figcaption{font-size:14px;font-weight:600;margin-bottom:12px}img{width:100%;display:block}a{color:inherit}.note{background:white;padding:18px;border-left:4px solid #5f9186}table{border-collapse:collapse;width:100%;margin:24px 0}td,th{text-align:left;padding:12px;border-bottom:1px solid #c5d0c7}@media(max-width:800px){main{padding:20px}.pair{grid-template-columns:1fr}h1{font-size:28px}}</style><main><p>9 GLENN / HOUSE PHOTO REFERENCE</p><h1>Pool position, two matching rounded entries and fountain</h1><p>The pool now sits beside the front portion of the east wall. Both ends use matching rounded entries with one submerged step each, and the fountain statue stands inside the front entry, directing water into the pool.</p><p><a href="../../9-glenn-viewer.html?revision=pool-still-surface#3d">Open updated 3D model</a> · <a href="../../drawings/ground.svg">Open updated ground plan</a> · <a href="../elevation-match/comparison.html">Original PDF elevation comparison</a></p><div class="note">Position and proportions are estimated against the known house wall in the aerial. The user clarified that the two rounded entries are the same size. Neither photo supplies measured pool dimensions or resolves the exact statue carving.</div>'''
+page+='<h2>Position and shape from above</h2>'+pair('reference-overhead-close.png','User aerial detail · house above, pool below','overhead.png','Actual 3D overhead · same orientation')
+page+='''<table><tr><th>Feature</th><th>Updated model</th></tr><tr><td>Overall water envelope</td><td>Approximately 8.3 × 4.0 m</td></tr><tr><td>Two matching entries</td><td>1.3 m radius at each end; identical reflected outlines and steps</td></tr><tr><td>House-to-water distance</td><td>Approximately 1.0 m, including 300 mm coping</td></tr><tr><td>Position along the house</td><td>Beside the front portion of the east wall; larger paved area toward the rear</td></tr><tr><td>Fountain</td><td>Statue on a circular pedestal inside the front entry, with a jet into the pool</td></tr></table><h2>Pool and fountain</h2>'''
+page+=pair('reference-two-entries.png','User close-up · pool ends and fountain statue','close-up.png','Actual 3D · matching ends, steps and fountain')
+page+=pair('reference-fountain-inside.png','User close-up · fountain stands within the pool','close-up.png','Model · fountain supported on the submerged entry')
+page+='''<p>The statue uses an approximate upright, curled sculptural silhouette with a weathered blue-green finish. Its subject and fine carving cannot be confirmed from the supplied image. Water depth is 1.2 m as specified, with a 160 mm water drop and a basin floor 1.36 m below the surround. Each entry has one submerged step. Step level and statue dimensions remain estimates. The pool surface is smooth, without surface waves. Flowing fountain droplets and their expanding, fading impact ripples remain animated in the live model.</p><h2>Whole-house placement</h2>'''
+page+=f'<figure><img src="{image("whole-house.png")}" alt="Pool beside the front portion of the house"></figure><p>The shared ground-plan outlines drive the basin, coping, paving, both single entry steps and fountain position. Checks cover containment, matching entry outlines, shared SVG edits, valid model geometry and floor visibility.</p></main></html>'
+(OUT/'comparison.html').write_text(page)
+(OUT/'observations.md').write_text('''# Corrected pool from aerial and close-ups
+
+The earlier 4.2 × 7.8 m estimate placed the pool too far toward the rear and included only one rounded entry. This revision uses a 4.0 × 8.3 m water envelope at X 27,630–31,630 mm and Z 5,300–13,600 mm, leaving 1,000 mm from the east wall to the water. The house end and aerial pool silhouette establish approximate position and proportions; no pool dimensions are printed in the reference.
+
+Both entries are the same 1,300 mm radius, as explicitly clarified by the user. Their outlines and steps are reflections of each other across the pool midpoint. The statue is a fountain, placed on a pedestal supported by the submerged front entry step, with an arcing water jet into the pool. The sculptural form is an approximation, not an identified or measured replica.
+
+The original PDF does not show this pool. The pool photo report is separate from the house's PDF elevation comparisons.
+''')
+print('Wrote pool photo comparison report.')

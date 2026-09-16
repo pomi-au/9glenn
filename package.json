@@ -1,0 +1,41 @@
+{
+  "name": "9-glenn-viewer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:3d": "esbuild model/viewer-3d.js --bundle --format=iife --target=es2020 --minify --legal-comments=inline --outfile=assets/model-3d.js --loader:.png=dataurl --loader:.jpg=dataurl",
+    "test:3d": "node scripts/check_3d.cjs",
+    "build": "python3 scripts/build_drawings.py && npm run build:3d",
+    "test:stairs": "node scripts/check_stairs.cjs",
+    "audit:elevations": "esbuild scripts/elevation-audit-render.js --bundle --loader:.jpg=dataurl --loader:.png=dataurl --format=iife --outfile=tmp/elevation-match/render.js && node scripts/capture_elevation_match.cjs && python3 scripts/render_pdf_elevations.py && python3 scripts/analyse_elevation_match.py && python3 scripts/build_elevation_match_report.py",
+    "test:elevations": "python3 scripts/check_elevation_match.py",
+    "test:fixtures": "node scripts/check_fixtures.cjs",
+    "test:pool": "node scripts/check_pool.cjs",
+    "test:tour": "node scripts/check_tour.cjs",
+    "test:swimming": "node scripts/check_swimming.cjs",
+    "test:landscape": "node scripts/check_landscape.cjs",
+    "test:webgpu": "node scripts/check_webgpu.cjs",
+    "test:photo-scene": "node scripts/check_photo_scene.mjs",
+    "test:environment:physics": "node scripts/check_grass.mjs && node scripts/check_environment_physics.mjs && node scripts/check_pointer_interaction.mjs && node scripts/check_texture_hit.mjs",
+    "test:environment": "node scripts/check_environment.cjs",
+    "test:materials": "node scripts/check_material_upgrade.cjs",
+    "test:reflections": "node scripts/check_glazing.mjs && node scripts/check_planar_optics.mjs && node scripts/check_photo_scene.mjs && node scripts/check_reflections.cjs",
+    "test:door-relief": "node scripts/check_door_relief.mjs && node scripts/check_door_relief_material.mjs && node scripts/check_door_motion.mjs && node scripts/check_door_relief.cjs",
+    "test:photo-cleanup": "node scripts/check_photo_foliage.mjs && node scripts/check_photo_denoiser.mjs && node scripts/check_render_quality.mjs && node scripts/check_photo_cleanup.cjs",
+    "test:fountain": "node scripts/check_fountain_sculpture.mjs && node scripts/check_fountain_flow.mjs && node scripts/check_fountain_waves.mjs && node scripts/check_fountain.cjs",
+    "test:stair-floor-finish": "node scripts/check_stair_floor_finish.cjs",
+    "test:fountain-detail": "node scripts/check_fountain_relief.mjs && node scripts/check_fountain_detail.cjs",
+    "test:site-surfaces": "node scripts/check_site_surface_materials.mjs && node scripts/check_site_surfaces.cjs"
+  },
+  "dependencies": {
+    "polygon-clipping": "0.15.7",
+    "three": "0.185.1",
+    "three-gpu-pathtracer": "https://codeload.github.com/gkjohnson/three-gpu-pathtracer/tar.gz/010d21099bc9a998364f0f698f5aa2865782130e",
+    "three-mesh-bvh": "0.9.15",
+    "xatlas-web": "0.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.9",
+    "prettier": "3.6.2"
+  }
+}

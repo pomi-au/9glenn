@@ -1,0 +1,16 @@
+tmp/
+.DS_Store
+__pycache__/
+
+node_modules/
+
+# Generated distribution archive exceeds GitHub's file-size limit.
+/9-glenn-drawing-set.zip
+
+# Local review artifacts are not published.
+/audit/
+/output/
+
+# Keep one web entry point and omit original reference scans.
+/9-glenn-viewer.html
+/assets/source-*.jpg

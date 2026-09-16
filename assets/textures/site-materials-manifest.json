@@ -1,0 +1,58 @@
+{
+  "title": "Generated site material albedo textures",
+  "generatedAt": "2026-09-16",
+  "generator": "OpenAI built-in image_gen.imagegen",
+  "provenance": "AI-generated architectural material images requested for this project. Original generated PNGs copied without image editing.",
+  "notes": [
+    "Generated as orthographic, evenly lit, intended-seamless base-color surfaces; these are synthetic textures, not measured material scans.",
+    "Physical repeats are intended material scales. Any normals, bump or roughness later derived from these images are artistic approximations, not measured displacement.",
+    "Paving has no baked slab grid; physical paving joints are supplied by the model."
+  ],
+  "textures": {
+    "asphalt": {
+      "file": "site-asphalt.png",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-946d7a1a-7f2c-4822-95ac-c5676c7c146e.png",
+      "width": 1254,
+      "height": 1254,
+      "physicalRepeatMetres": [
+        1.2,
+        1.2
+      ],
+      "purpose": "base-color/albedo",
+      "prompt": "Use case: photorealistic-natural\nAsset type: seamless architectural PBR base-color texture, square 1024 by 1024 image\nPrimary request: An orthographic flat scan of aged dark charcoal asphalt tar road, filling the entire square edge to edge. The tile represents approximately 2.4 by 2.4 metres of a residential driveway leading to a garage.\nMaterials/textures: Dense compact bitumen with irregular fine grey mineral aggregate predominantly 3–8 mm, fine granular roughness, restrained subtle wear and natural nonuniform dark charcoal greys. Authentic dry weathered asphalt, sufficiently fine-grained for a real driveway, not coarse gravel.\nComposition/framing: Camera precisely perpendicular to a continuous flat surface; seamless repeating tile with matching opposite edges, no perspective or horizon. Uniform microdetail and restrained broad color variation without obvious repeated landmarks.\nLighting: Neutral evenly diffuse, de-lit albedo scan. No directional lighting, no cast shadows, no baked highlights, no vignette, no ambient-occlusion dark outlines.\nConstraints: Surface only. No lane markings, paint, cracks, potholes, paving joints, large stones, footprints, plants, debris, objects, text, borders, watermark or frame.",
+      "scaleAdjustment": "Mapped at 1.2m after visual inspection so the generated aggregate reads as fine driveway stone; generation prompt originally requested 2.4m.",
+      "runtimeFinish": {
+        "albedoContrast": 0.65,
+        "derivedReliefMetres": 0.00065
+      }
+    },
+    "soil": {
+      "file": "site-soil.png",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-d182fa34-206c-4a94-9df1-f10e6bb50d37.png",
+      "width": 1254,
+      "height": 1254,
+      "physicalRepeatMetres": [
+        1.2,
+        1.2
+      ],
+      "purpose": "base-color/albedo",
+      "prompt": "Use case: photorealistic-natural\nAsset type: seamless architectural PBR base-color texture, square 1024 by 1024 image\nPrimary request: An orthographic flat scan of rich brown garden loam, filling the entire square edge to edge. The tile represents approximately 1.2 by 1.2 metres of cultivated garden-bed soil.\nMaterials/textures: Fine crumbly irregular brown loam clods mostly 2–12 mm, occasional tiny muted pebbles and tiny bark fragments. Rich natural earthy brown with restrained variation from warmer ochre brown grains to darker organic flecks. Realistic slightly settled garden soil, not mud, sand, gravel or cracked desert.\nComposition/framing: Camera precisely perpendicular to a continuous flat surface; seamless repeating tile with matching opposite edges, no perspective or horizon. Full-field physical surface detail without a central subject.\nLighting: Neutral evenly diffuse, de-lit albedo scan. No directional lighting, no cast shadows, no baked highlights, no vignette, no exaggerated dark crevices.\nConstraints: Soil surface only. No plants, leaves, grass, roots, flowers, large rocks, logs, footprints, tools, objects, text, borders, watermark or frame.",
+      "runtimeFinish": {
+        "albedoContrast": 0.75,
+        "derivedReliefMetres": 0.002
+      }
+    },
+    "paving": {
+      "file": "site-paving.png",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-ea36c534-8766-44c8-bfff-158f59adcb04.png",
+      "width": 1254,
+      "height": 1254,
+      "physicalRepeatMetres": [
+        1.2,
+        1.2
+      ],
+      "purpose": "base-color/albedo",
+      "prompt": "Use case: photorealistic-natural\nAsset type: seamless architectural PBR base-color texture, square 1024 by 1024 image\nPrimary request: An orthographic flat scan of a pale warm-grey honed limestone paving-stone surface, filling the entire square edge to edge. The tile represents approximately 1.2 by 1.2 metres of stone material. This is the stone surface only; slab outlines and paving joints will be modelled separately in 3D.\nMaterials/textures: Quiet fine irregular limestone mineral grain, small softly defined pores, subtle natural cream-grey mottling and occasional tiny darker mineral specks. Restrained realistic outdoor honed stone with tactile fine detail and a matte dry finish.\nComposition/framing: Camera precisely perpendicular to one continuous flat surface; seamless repeating tile with matching opposite edges, no perspective, horizon or central subject. Uniform visual density with gentle nonuniform natural grain.\nLighting: Neutral evenly diffuse, de-lit albedo scan. No directional lighting, no cast shadows, no baked highlights, no vignette, no dark artificial edge shading.\nConstraints: Stone surface only. Absolutely no slab grid, tile grid, joints, seams, grout, cracks, bevels, borders, large fossils, strong marble veins, objects, dirt patches, plants, text, watermark or frame."
+    }
+  }
+}

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-reference-images="false">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#ffffff">
+  <title>9 Glenn · Drawing viewer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/drawings.js" defer></script>
+  <script src="model/drawing-model.js" defer></script>
+  <script src="assets/model-3d.js" defer></script>
+  <script src="model/linked-pan-zoom.js" defer></script>
+<script src="viewer.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="#ground" aria-label="9 Glenn, ground floor">
+      <svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M6 17 18 6l12 11v14H6V17Z"/><path d="M14 31V20h8v11M3 18 18 3l15 15"/></svg>
+      <span><strong>9 Glenn<span class="brand-dot">.</span></strong><small>RESIDENCE DRAWINGS</small></span>
+    </a>
+    <div class="header-meta"><span class="status-dot"></span>Vector drawing set <span class="divider">/</span> 8 views</div>
+    <div class="header-actions">
+      <button id="reference-button" aria-label="Compare source" title="Compare source" class="button" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="2"/><path d="M10 3v14"/></svg><span>Compare source</span></button>
+      <button id="download-button" aria-label="Download SVG" title="Download SVG" class="button primary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 12v5h14v-5"/></svg><span>Download SVG</span></button>
+    </div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar">
+      <div class="sidebar-heading">DRAWING SET <span>01—08</span></div>
+      <nav id="drawing-nav" aria-label="Choose drawing"></nav>
+      <section class="layers">
+        <h2>Drawing layers</h2>
+        <label><input type="checkbox" data-toggle="dimensions" checked><span>Dimensions</span><i class="layer-mark dimension-mark"></i></label>
+        <label><input type="checkbox" data-toggle="walls" checked><span>Walls</span></label>
+        <label><input type="checkbox" data-toggle="openings" checked><span>Doors &amp; windows</span></label>
+        <label><input type="checkbox" data-toggle="fixtures" checked><span>Fixtures &amp; details</span></label>
+        <label><input type="checkbox" data-toggle="labels" checked><span>Editable labels</span></label>
+        <label><input type="checkbox" data-toggle="rooms" checked><span>Room selection</span></label>
+      </section>
+      <div class="sidebar-footer"><span class="file-icon">SVG</span><div>Clean architectural vectors<small>Original sheets included</small></div></div>
+    </aside>
+    <main class="main">
+      <div class="view-heading"><div><div id="view-category" class="eyebrow">FLOOR PLANS / 01</div><h1 id="view-title">Ground floor</h1><p id="view-summary">Living spaces, garage and portico</p></div><button class="button icon-button" id="details-button" aria-label="Toggle drawing details" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 9v6m0-10v1"/></svg></button></div>
+      <div class="toolbar">
+        <div class="tool-group" role="group" aria-label="Drawing tool">
+          <button id="pan-button" aria-label="Select" class="tool active" aria-pressed="true" title="Pan and select (V)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 2 11 9-6 1-3 6L5 2Z"/></svg><span>Select</span></button>
+          <button id="measure-button" aria-label="Measure" class="tool" aria-pressed="false" title="Measure two points (M)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m3 13 10-10 4 4L7 17l-4-4Zm4-4 2 2m1-5 2 2m-8 4 2 2"/></svg><span>Measure</span></button>
+        </div>
+        <div class="tool-group zoom-controls"><button id="zoom-out" class="tool icon-button" aria-label="Zoom out">−</button><output id="zoom-level">100%</output><button id="zoom-in" class="tool icon-button" aria-label="Zoom in">+</button><button id="fit-button" class="tool" title="Fit drawing (F)">Fit</button></div>
+        <div class="toolbar-end"><label class="unit-label" for="units">Ruler units</label><select id="units" aria-label="Ruler units"><option value="mm">mm</option><option value="m">m</option><option value="ft">ft / in</option></select></div>
+      </div>
+      <div class="drawing-area">
+        <div class="canvas-columns">
+          <div id="drawing-pane" class="drawing-pane">
+            <div class="canvas-badge"><span class="status-dot"></span><span id="canvas-label">GROUND FLOOR</span><span class="tag">CLEAN SVG · mm</span></div>
+            <div class="overlay-toolbar"><label><input type="checkbox" id="overlay-toggle"> Overlay PDF</label><div id="overlay-controls" hidden><input id="overlay-opacity" type="range" min="0" max="100" value="50" aria-label="PDF overlay opacity"><output id="overlay-value">50% PDF</output></div></div><div id="stage" class="stage" tabindex="0" aria-label="Interactive drawing. Drag to pan, scroll to zoom. Press M to measure, F to fit."></div>
+            <div class="canvas-bottom"><span id="tool-hint">Click a room to inspect · drag to pan · scroll to zoom</span><button id="clear-active" class="text-button" hidden>Cancel point</button></div>
+          </div>
+          <section id="reference-pane" class="reference-pane" hidden aria-label="Original PDF sheet">
+            <div class="reference-header"><label for="source-page">Original sheet</label><select id="source-page" aria-label="Original source sheet"><option value="1">01 · Site survey</option><option value="2">02 · First floor</option><option value="3">03 · Cellar & site plan</option><option value="4">04 · Ground floor</option><option value="5">05 · Elevations 1 & 2</option><option value="6">06 · Elevations 3 & 4</option><option value="7">07 · Section X–X</option></select><button id="close-reference" class="tool icon-button" aria-label="Close source comparison">×</button></div>
+            <div class="reference-image-wrap"><svg id="source-viewport" xmlns="http://www.w3.org/2000/svg" aria-label="Linked PDF comparison. Drag to pan, scroll or pinch to zoom."><image id="source-calibrated" preserveAspectRatio="none"/></svg><img id="source-image" alt="Original scanned ground floor plan, sheet 4" tabindex="0" title="Click to enlarge; click again to fit" hidden></div>
+            <div class="reference-caption">Linked zoom and pan · drag either pane · ruler applies to vector only</div>
+          </section>
+        </div>
+        <aside id="inspector" class="inspector" hidden aria-label="Drawing details">
+          <section id="selection-details" class="selection-details" hidden></section>
+          <section class="drawing-details"><div class="section-heading"><h2>Drawing details</h2><span id="sheet-chip" class="sheet-chip">SHEET 04</span></div><dl id="drawing-facts"></dl></section>
+          <section class="measurements-panel"><div class="section-heading"><h2>Measurements</h2><button id="clear-measurements" class="text-button" hidden>Clear</button></div><div id="measurement-list"><p class="empty-measurements">Select <strong>Measure</strong>, then choose two points on the drawing.</p></div><label class="snap-option"><input type="checkbox" id="snap" checked>Snap to wall corners & dimensions</label></section>
+          <section class="accuracy-note"><span class="accuracy-icon">i</span><div><strong>About the dimensions</strong><p>Clean geometry in millimetres. Checked spans match the printed dimensions. Some source details remain unverified; view the audit before relying on a measurement.</p><button id="accuracy-button" class="text-button">Dimension audit ↗</button></div></section>
+        </aside>
+      </div>
+      <footer class="statusbar"><span><span class="status-dot"></span>Local drawing viewer</span><span id="coordinate-readout">Coordinates in mm</span><span>Printed dimensions take precedence</span></footer>
+    </main>
+  </div>
+  <dialog id="accuracy-dialog">
+    <div class="dialog-heading"><h2>Dimension audit</h2><button id="close-dialog" class="tool icon-button" aria-label="Close measurement notes">×</button></div>
+    <p>The drawing uses straight walls, geometric curves and editable SVG text. One SVG coordinate equals one millimetre. Original PDF reference images are not included in this web viewer.</p>
+    <p><strong>Verified scope:</strong> the checks below compare reconstructed wall-face spans and level heights with legible printed dimensions. They do not certify every detail or a 100% image match.</p>
+
+    <p><strong>Ruler:</strong> distances are calculated from SVG geometry. Free point placements show approximate values; recognised dimension endpoints show the dimensioned model span. Exports contain vectors and text, without the reference image.</p>
+    <h3 id="audit-summary"></h3>
+    <div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>Span</th><th>PDF</th><th>Model</th><th>Difference</th></tr></thead><tbody id="audit-checks"></tbody></table></div>
+    <h3>Unverified details / discrepancies</h3><ul id="audit-issues"></ul>
+    <p>Source: <strong>Proposed Boyd Residence, Lot 55, Glenn Avenue, Mosman Park</strong>. The source calls the road Glenn Avenue; the supplied filename says Glenn street.</p>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

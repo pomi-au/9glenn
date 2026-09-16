@@ -1,0 +1,44 @@
+{
+  "generator": "Built-in OpenAI image_gen",
+  "date": "2026-09-15",
+  "purpose": "Photorealistic illustrative surface materials, not measured scans of this property.",
+  "processing": "Original generated PNGs copied unchanged into workspace. Runtime normal/bump and roughness maps are artistic luminance-derived approximations; repeat edges requested seamless.",
+  "assets": [
+    {
+      "id": "plaster-v2",
+      "path": "assets/textures/plaster-v2.png",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a46b-a14c-74d0-b6d0-40a6fa0d5bac/exec-4a5354b3-9194-40fc-bcae-f7d431bc17f1.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color texture for walls in an architectural WebGPU renderer. Produce one square texture, 1024 by1024, showing 1 metre of warm ivory hand-applied mineral lime plaster straight on. Fine irregular sand grains, tiny pinholes, layered fine trowel sweeps, subtle broad natural tonal mottling, slightly coarser character than smooth painted drywall. Rich tactile detail but restrained residential finish, no damage. Uniform soft neutral diffuse illumination, albedo only. No directional highlights, baked shadows, perspective, vignette, objects, text or borders. Edge-to-edge seamless repeat. The surface must look organically nonuniform, never like identical stamped noise."
+    },
+    {
+      "id": "door-oak-v2",
+      "path": "assets/textures/door-oak-v2.png",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a46b-a14c-74d0-b6d0-40a6fa0d5bac/exec-6c9b70ec-dc9c-4c61-a1d7-f4056a12077d.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color texture for solid oak doors and cabinetry in a photoreal architectural renderer. One square1024 by1024 texture, flat straight-on macro photograph of natural pale honey European oak timber, vertically running irregular wood grain, fine open pores, elongated growth patterns, occasional small natural knots, subtle tone variation and restrained darker grain. Coverage about60cm wide by1.2m tall. Continuous joined timber with no visible board joints, no door shape, handles, panels or hardware. Dry matte clear finish. Uniform neutral diffuse illumination, albedo only: no reflections, directional shadows, perspective, vignette, objects, text or border. Seamlessly repeat all edges. High photographic material detail, not illustrated grain."
+    },
+    {
+      "id": "floor-oak-v2",
+      "path": "assets/textures/floor-oak-v2.png",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a46b-a14c-74d0-b6d0-40a6fa0d5bac/exec-c3ea3e60-b33e-4b91-9d07-2b5f79084f60.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color texture for realistic residential oak plank flooring. One square1024 by1024 texture, overhead orthographic view of six18cm-wide oak boards across a1.08m by2.4m repeat, grain running vertically. Natural light warm oak, irregular finely resolved pores and wavy grain, restrained knots, clear board-to-board variation from pale straw to light honey, realistically staggered end joints, narrow1mm joints and subtle wear. Avoid identical repeated boards. Neutral diffuse lighting, albedo only, no cast shadows or baked highlights, no ambient occlusion, no perspective, vignette, objects, text or border. All edges seamless; physical realism rather than stylized pattern."
+    },
+    {
+      "id": "bark",
+      "path": "assets/textures/bark-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR bark albedo texture for cylindrical mature evergreen tree trunks in an architectural WebGPU scene. Generate a square 1024x1024 continuous realistic tree bark surface: irregular vertical gray-brown fissures, subtly raised layered bark plates, fine fibrous grain, warm muted umber undertones with sparse silvery lichen flecks and slight natural weathering. Coverage approximately 0.8m wide by1.0m tall. Straight-on orthographic macro surface with uniform neutral diffuse lighting, no overall illumination gradient, no hard cast shadows, no highlights, no trunk outline or branches, no surrounding scenery, text or border. Natural irregularity must be visible and restrained; left/right and top/bottom edges seamlessly repeat. This is material color only, relief will be computed separately.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-f346a4e0-5fab-4d46-8bda-3ddb93808083.png",
+      "generator": "Built-in OpenAI imagegen",
+      "generated": "2026-09-15",
+      "processing": "Original PNG copied unchanged. Renderer derives normal/bump/roughness maps as artistic approximations of relief; these are not measured physical scans."
+    },
+    {
+      "id": "carpet",
+      "path": "assets/textures/carpet-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR carpet albedo texture for residential bedroom and study floors in architectural WebGPU visualization. Generate a square1024x1024 perfectly seamless macro surface of premium warm oatmeal-beige wool cut-pile carpet. Dense short tufts and individual twisted wool fibers, subtly irregular pile direction, restrained ivory/taupe yarn flecks, small natural tone variation across the surface without obvious stains or repeated patterns. The image covers0.6m by0.6m of actual carpet, photographic material detail. Flat orthographic top-down with neutral uniformly diffuse lighting. No baked directional shadows, highlights, broad gradients, perspective, seams, room edges, furniture, border, text or watermark. All edges must repeat seamlessly. Base color only: relief and roughness will be computed separately.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-efc9318a-04d3-425b-bd16-f0199413ec17.png",
+      "generator": "Built-in OpenAI imagegen",
+      "generated": "2026-09-15",
+      "processing": "Original PNG copied unchanged. Renderer derives normal/bump/roughness maps as artistic approximations of relief; these are not measured physical scans."
+    }
+  ]
+}

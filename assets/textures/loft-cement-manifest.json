@@ -1,0 +1,20 @@
+{
+  "title": "Generated loft cement floor albedo",
+  "generatedAt": "2026-09-16",
+  "generator": "OpenAI built-in image_gen.imagegen",
+  "file": "loft-cement.png",
+  "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-0405cf07-5ef5-4951-b5d5-1d475a0f75c1.png",
+  "width": 1254,
+  "height": 1254,
+  "physicalRepeatMetres": [
+    2.4,
+    2.4
+  ],
+  "purpose": "base-color/albedo",
+  "provenance": "AI-generated material texture requested for the project. Original generated PNG copied without image editing.",
+  "notes": [
+    "Intended seamless synthetic albedo; not a measured scan. Any derived normal, bump or roughness maps are artistic approximations, not measured surface relief.",
+    "Visually inspected for warm neutral grey, broad subtle trowel variation, small mineral specks, and absence of grids, cracks, objects or directional lighting."
+  ],
+  "prompt": "Use case: photorealistic-natural\nAsset type: square seamless architectural PBR base-color texture for a 3D loft cement floor, 1024 by 1024 image\nPrimary request: An orthographic flat material scan of an architectural loft polished and hand-trowelled cement floor. One continuous cement surface fills the whole square edge to edge, representing approximately 2.4 by 2.4 metres.\nMaterials/textures: Warm neutral medium-light grey cement, soft irregular broad trowel clouds with restrained tonal variation, small mineral specks and fine micro pores. Elegant believable industrial loft flooring, smooth dry satin finish with tactile subtle detail. Keep clouds naturally irregular without strong stains or overly busy speckles.\nComposition/framing: Camera precisely perpendicular to a continuous flat surface, no perspective or horizon. Seamlessly repeatable tile with matching opposite edges and no central subject.\nLighting: Uniform neutral diffuse de-lit albedo scan. No baked directional light, shadows, highlights or reflections; no vignette.\nConstraints: Surface only. No tile grid, boards, joints, seams, borders, large cracks, distress, footprints, objects, text or watermark."
+}

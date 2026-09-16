@@ -1,0 +1,45 @@
+{
+  "generator": "Built-in OpenAI imagegen (gpt-image)",
+  "generated": "2026-09-15",
+  "purpose": "AI-generated architectural visualizations; not measured scans or a reconstruction of the property's exact finishes.",
+  "processing": "Original generated PNG retained at generator source; project base color stored as JPEG quality 88. Derived roughness and tangent-space normal maps are computed from luminance, not independently measured physical maps. Seamless edges were requested; tiling is approximate.",
+  "assets": [
+    {
+      "id": "foliage",
+      "path": "assets/textures/foliage-albedo.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: transparent-background foliage cutout texture for architectural 3D tree leaf clusters. A small natural spray of around 14 green evergreen leaves on a very slender branching twig, realistic mature glossy but softly lit small oval/elliptical leaves with pointed tips, dark olive green and fresh muted green variations, fine real leaf veins, irregular organic cluster silhouette, open gaps between leaves. Front view with subtly varied natural leaf angles, evenly spread loosely within a square frame, keep complete leaf tips and all branches inside frame. Genuine fully transparent alpha background including all gaps between leaves. Leaves only, no pot, no trunk, no ground, no backdrop, no cast shadows, no text, no border. Neutral very soft diffuse illumination with no hard highlights. Photographic botanical realism, not illustration.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-16b21b3d-f7eb-4db6-b778-e79c2bcdf2be.png",
+      "processing": "Original generated transparent PNG, alpha retained, no image edits."
+    },
+    {
+      "id": "plaster",
+      "path": "assets/textures/plaster-albedo.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color texture for architectural WebGPU path tracing. Generate one square 1024x1024 perfectly seamless tiling texture of warm off-white mineral lime plaster, fine natural sand grains and very subtle trowel variations at real-world 1 meter coverage. Flat orthographic macro surface viewed straight on, uniform diffuse neutral illumination. Color/albedo only: no baked shadows, highlights, ambient occlusion, perspective, vignette, lighting gradients, objects, text or border. Quiet premium residential exterior plaster, realistic minute irregularities, all four edges seamlessly repeat.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-fca8714a-b164-41f9-96c9-889c4f2ca343.png"
+    },
+    {
+      "id": "oak",
+      "path": "assets/textures/oak-albedo.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless architectural PBR base-color texture. Generate a square 1024x1024 seamless tiling texture of natural light European oak flooring, six narrow straight boards across, each board 180mm wide, lengths staggered subtly across a 2.4m tall repeat. Grain runs vertically. Fine real oak pores, restrained natural knots, soft honey beige and pale tan variation. Flat orthographic overhead surface, neutral uniform diffuse light, albedo only. Extremely narrow joints, no bevel shadows, no lighting or reflections or ambient occlusion, no vignette, no perspective, no objects, labels, text or border. All edges seamlessly repeat.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-f6439e99-97cf-4f51-9cec-47d5b3fa1335.png"
+    },
+    {
+      "id": "terracotta",
+      "path": "assets/textures/terracotta-albedo.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless architectural PBR base-color texture applied to individually modeled clay roof tiles. Generate one square 1024x1024 perfectly seamless tiling macro surface of warm weathered burnt terracotta clay, soft muted reddish brown, subtle mineral flecks and minute pores, slight natural firing variations, luxurious old residential roof material. This is ONLY the flat clay surface material, not a picture of a roof and not a grid of tiles: do not depict tile silhouettes, ridges, courses or joints since those are already 3D geometry. Flat orthographic surface, uniform neutral diffuse illumination, albedo only. No directional light, baked shadows, highlights, vignette, perspective, objects, text or border. All four edges seamlessly repeat.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-7ebbde6e-8df7-45bb-b7e8-48f3a21d2bce.png"
+    },
+    {
+      "id": "paving",
+      "path": "assets/textures/paving-albedo.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless architectural PBR base-color texture for poolside and garden paving. Generate one square 1024x1024 perfectly seamless tiling texture of warm ivory-beige honed limestone paving, four 600mm square stones across and four down (2.4m square coverage), fine 3mm sand colored joints, understated fossil flecks and subtle cream mineral clouds, restrained stone-to-stone color variation. Straight regular grid. Flat orthographic overhead surface, neutral uniform diffuse illumination, albedo only. No baked shadows, highlights, lighting gradients, ambient occlusion, vignette, perspective, wet reflections, plants, objects, labels, text or border. All four edges seamlessly repeat.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-09107739-666f-45f5-8fc4-a025f70987b7.png"
+    },
+    {
+      "id": "roof",
+      "path": "assets/textures/roof-albedo.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color material for gray concrete roof tiles. Generate one square seamless macro texture of a SINGLE CONTINUOUS FLAT dark warm charcoal-gray cement surface with very fine sand pores and tiny muted mineral flecks, uniform graphite gray. Fill entire frame edge-to-edge with continuous concrete surface. Do not depict tiles or panels, no lines, seams, joints, edges, waves, ripples or geometric pattern. No visible objects at all: just flat fine concrete material. Neutral uniform diffuse illumination, albedo only, absolutely no cast shadows, highlights, lighting gradients, ambient occlusion, vignette, perspective, labels or text. All four edges seamlessly repeat. Coverage 640mm by 600mm.",
+      "source": "/Users/yinsee/.codex/generated_images/01a0a471-93bf-7191-9919-7cf914dade19/exec-30b43a9e-1ec5-400e-8569-3ff306f45845.png"
+    }
+  ]
+}
