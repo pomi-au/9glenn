@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:3d": "esbuild model/viewer-3d.js --bundle --format=iife --target=es2020 --minify --legal-comments=inline --outfile=assets/model-3d.js --loader:.png=dataurl --loader:.jpg=dataurl",
+    "build:3d": "esbuild model/viewer-3d.js --bundle --format=iife --target=es2020 --minify --legal-comments=inline --outfile=assets/model-3d.js --loader:.png=dataurl --loader:.jpg=dataurl && node scripts/version_web_assets.mjs",
     "test:3d": "node scripts/check_3d.cjs",
     "build": "python3 scripts/build_drawings.py && npm run build:3d",
     "test:stairs": "node scripts/check_stairs.cjs",

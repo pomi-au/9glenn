@@ -54,7 +54,7 @@ function buildNavigation() {
       button.className = 'nav-item';
       button.dataset.drawing = drawing.id;
       const name = drawing.title.replace('Elevation ', '').replace(' · ', ' / ');
-      button.innerHTML = `<span class="nav-code">${number}</span><span>${name}</span><span class="nav-arrow">↗</span>`;
+      button.innerHTML = `<span class="nav-code">${number}</span><span>${name}</span>`;
       button.addEventListener('click', () => { location.hash = drawing.id; });
       $('#drawing-nav').append(button);
     }
@@ -95,7 +95,6 @@ function openDrawing(id) {
   $('#view-summary').textContent = drawing.summary;
   const category = { plan: 'FLOOR PLANS', elevation: 'ELEVATIONS', section: 'SECTION' }[drawing.kind];
   $('#view-category').textContent = `${category} / ${String(drawings.indexOf(drawing) + 1).padStart(2, '0')}`;
-  $('#canvas-label').textContent = drawing.title.toUpperCase();
   $('#sheet-chip').textContent = `SHEET ${String(drawing.page).padStart(2, '0')}`;
   $('#drawing-facts').replaceChildren();
   for (const [label, value] of drawing.facts) {

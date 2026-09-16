@@ -28,7 +28,7 @@ const {
     });
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(
-      "file://" + path.join(__dirname, "../9-glenn-viewer.html") + "#3d",
+      "file://" + path.join(__dirname, "../index.html") + "#3d",
     );
     await page.waitForFunction(() => window.Building3D?.instance, null, {
       timeout: 30000,

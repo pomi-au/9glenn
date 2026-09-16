@@ -13,14 +13,12 @@ import { buildModel } from "./build-model.js";
 import { modelRotation } from "./model-rotation.js";
 import { tourControls } from "./tour-controls.js";
 import { selectionOutline } from "./selection-outline.js";
-import { mountCompactUI } from "./compact-ui.js";
 import { mountTripleView } from "./triple-view.js";
 
 const $ = (selector) => document.querySelector(selector);
 let instance;
 let initialization;
 let triple;
-let lastDrawing = "ground";
 const settings = {
   floor: "all",
   explode: 0,
@@ -31,45 +29,6 @@ const settings = {
   dimensions: false,
   plans: false,
 };
-function controlsHTML() {
-  const spec = window.BUILDING_SPEC;
-  const levels = {
-    first:
-      "+" + ((spec.groundCeiling + spec.floorZone) / 1000).toFixed(3) + " m",
-    cellar:
-      "−" + ((spec.cellarClearance + spec.floorZone) / 1000).toFixed(3) + " m",
-    ground: "±0.000 m",
-    all: "All levels",
-  };
-  return `<div class="sidebar-heading">BUILDING MODEL <span>3D</span></div>
-    <h2 class="model-section-title">Floors</h2>
-    <div class="floor-options">${[
-      ["all", "Whole building"],
-      ["first", "First floor"],
-      ["ground", "Ground floor"],
-      ["cellar", "Cellar"],
-    ]
-      .map(
-        ([id, title]) =>
-          `<button data-floor="${id}" aria-pressed="${id === "all"}">${title}<span>${levels[id]}</span></button>`,
-      )
-      .join("")}</div>
-    <section class="model-options"><label for="explode">Separate floors <output id="explode-value">0.0 m</output></label><input id="explode" type="range" min="0" max="6" step="0.1" value="0">
-    ${[
-      ["roof", "Roof", true],
-      ["landscape", "Landscaping", true],
-      ["cut", "Wall cutaway", false],
-      ["labels", "Room names", false],
-      ["dimensions", "Overall dimensions", false],
-      ["plans", "Plan outlines", false],
-    ]
-      .map(
-        ([id, title, checked]) =>
-          `<label class="model-check"><input id="model-${id}" type="checkbox" ${checked ? "checked" : ""}>${title}</label>`,
-      )
-      .join("")}</section>
-    <div class="model-note"><strong>One drawing model</strong><p>Wall footprints, openings and rooms share the 2D vector data. Heights use the section.</p><p>Roof intersections, some sill heights and cellar alignment are inferred. This model is a visual reconstruction.</p><button id="model-to-plan" class="text-button">Open floor plan ↗</button></div>`;
-}
 async function init() {
   const host = $("#model-canvas");
   const renderer = await createWebGPURenderer();
@@ -809,16 +768,6 @@ async function route() {
   const enabled = location.hash === "#3d" || touring;
   const comparing = location.hash.startsWith("#compare/");
   const comparisonId = location.hash.slice(9);
-  if (
-    comparing &&
-    window.DRAWINGS.some((d) => d.id === comparisonId.replace(/^roof-/, ""))
-  )
-    lastDrawing = comparisonId.replace(/^roof-/, "");
-  if (!enabled && window.DRAWINGS.some((d) => d.id === location.hash.slice(1)))
-    lastDrawing = location.hash.slice(1);
-  document.body.classList.toggle("mode-3d", enabled);
-  $("#mode-2d").setAttribute("aria-pressed", String(!enabled && !comparing));
-  $("#mode-3d").setAttribute("aria-pressed", String(enabled));
   if (enabled && !instance) {
     $("#model-error").hidden = true;
     $("#model-error").textContent = "";
@@ -841,59 +790,10 @@ async function route() {
     if (touring) instance?.enterTour();
     else instance?.exitTour();
   }
-  triple.activate(comparing, comparing ? comparisonId : lastDrawing);
+  await triple.activate(comparing, comparisonId);
 }
 function boot() {
-  const modes = document.createElement("div");
-  modes.className = "view-modes";
-  modes.setAttribute("aria-label", "View mode");
-  modes.innerHTML =
-    '<button id="mode-2d" aria-pressed="true">Drawings</button><button id="mode-3d" aria-pressed="false">3D</button><button id="mode-compare" aria-pressed="false">Compare</button>';
-  $(".header-meta").replaceWith(modes);
-  const exportButton = document.createElement("button");
-  exportButton.id = "model-download";
-  exportButton.className = "button primary";
-  exportButton.setAttribute("aria-label", "Save 3D image");
-  exportButton.title = "Save 3D image";
-  exportButton.innerHTML =
-    '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 12v5h14v-5"/></svg><span>Save 3D image</span>';
-  $(".header-actions").append(exportButton);
-  const controls = document.createElement("div");
-  controls.id = "model-controls";
-  controls.innerHTML = controlsHTML();
-  $(".sidebar").append(controls);
-  const view = document.createElement("section");
-  view.id = "model-view";
-  view.innerHTML = `<div class="view-heading model-heading"><div><div class="eyebrow">9 GLENN / SHARED DRAWING MODEL</div><h1>3D building</h1><p id="model-state">Whole building</p></div></div><div class="toolbar model-camera-toolbar" aria-label="Camera views">${[
-    ["iso", "Axonometric"],
-    ["street", "Street"],
-    ["top", "Top"],
-    ["front", "Front"],
-    ["rear", "Rear"],
-    ["left", "Left"],
-    ["right", "Right"],
-  ]
-    .map(
-      ([id, title]) =>
-        `<button class="tool" data-camera="${id}" aria-pressed="${id === "iso"}">${title}</button>`,
-    )
-    .join(
-      "",
-    )}<button class="tool" id="model-tour" title="Walk inside the building">Start tour →</button><button class="tool tour-only" id="tour-reset">Front door ↺</button><button class="tool tour-only" id="tour-exit">Exit tour</button><button class="tool" id="model-reset" title="Reset camera (R)">Reset ↺</button></div><div id="model-canvas"><div class="render-quality-bar"><div class="render-mode-switch" role="group" aria-label="Rendering quality"><button data-render-mode="explore" aria-pressed="true">Explore</button><button data-render-mode="photo" aria-pressed="false">Photo · Path tracing</button></div><label class="perspective-option"><input type="checkbox" id="model-perspective">Perspective</label><span id="render-progress" role="status">WebGPU · Live</span></div><div id="model-annotations"></div><div id="tour-transition" hidden role="status"></div><div id="tour-hud" hidden><div id="tour-crosshair" hidden aria-hidden="true"></div><div id="tour-prompt" hidden role="status"></div><div id="tour-pause"><div class="tour-card"><span class="eyebrow">EXPLORE THE BUILDING</span><h2>Walk through 9 Glenn</h2><p id="tour-message"></p><div class="tour-key-guide"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Walk</span><span>Mouse · Look</span><span><kbd>Esc</kbd> Pause</span></div><button id="tour-resume" class="button primary">Resume tour</button><button id="tour-pause-exit" class="text-button">Back to model</button></div></div><div class="tour-instructions">WASD · Walk &nbsp; Mouse · Look &nbsp; Click · Interact &nbsp; Esc · Pause</div></div><div class="model-canvas-badge"><span class="status-dot"></span>WEBGPU <span>Physically based materials</span></div><div id="model-selection" hidden><strong id="model-selected-name"></strong><p id="model-selected-info"></p></div><div id="model-error" hidden role="alert"></div><div class="model-gesture-hint">Move mouse over grass, leaves or water · drag to rotate · scroll to zoom · click doors</div></div><div class="statusbar model-status"><span id="model-hover-help">Brush plants and water without clicking</span><span id="model-scale"></span></div>`;
-  $(".main").append(view);
   triple = mountTripleView();
-  $("#mode-compare").onclick = () => {
-    location.hash = `compare/${lastDrawing}`;
-  };
-  $("#mode-2d").onclick = () => {
-    location.hash = lastDrawing;
-  };
-  $("#mode-3d").onclick = () => {
-    location.hash = "3d";
-  };
-  $("#model-to-plan").onclick = () => {
-    location.hash = settings.floor === "all" ? "ground" : settings.floor;
-  };
   $("#model-download").onclick = () => instance?.download();
   for (const b of document.querySelectorAll("[data-floor]"))
     b.onclick = () => {
@@ -940,11 +840,6 @@ function boot() {
     )
       instance?.preset();
   });
-  mountCompactUI();
-  window.addEventListener("hashchange", route);
-  route();
 }
-window.Building3D = { parseBuilding, wallContains };
-if (document.readyState === "loading")
-  document.addEventListener("DOMContentLoaded", boot);
-else boot();
+window.Building3D = { parseBuilding, wallContains, activate: route };
+boot();

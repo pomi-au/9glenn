@@ -16,7 +16,7 @@ async function main() {
     }
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('file://' + path.join(__dirname, '..', '9-glenn-viewer.html'));
+    await page.goto('file://' + path.join(__dirname, '..', 'index.html'));
     await page.waitForSelector('#stage svg');
     assert.equal(await page.locator('.nav-item').count(), 8);
     assert.equal(await page.locator('#view-title').textContent(), 'Ground floor');

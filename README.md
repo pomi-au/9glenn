@@ -4,6 +4,8 @@ Live viewer: **https://pomi-au.github.io/9glenn/**. GitHub Pages publishes the r
 
 Published source: committed WebGPU version `2d9631fee50bf929e633e045364a3662636793a6` from the local `codex/webgpu-photorealism` branch. Uncommitted development changes are excluded.
 
+The current interface is rendered directly by `index.html`. `app.js` handles navigation and downloads the WebGPU engine only for 3D, Tour or Compare; ordinary drawing use does not load it. The old layout and runtime layout-conversion module have been removed. Builds version the stylesheet and scripts by content so a new release cannot reuse stale UI code. Run `node scripts/check_startup.cjs` against a local server on port 8147 (or set `VIEWER_BASE_URL`) for blocked-script first paint, lazy loading and retry checks.
+
 This web edition excludes the offline HTML duplicate, drawing-set ZIP, audit folder and comparison report PDF. It retains all eight SVG drawings, the 3D model and the original PDF reference scans. Use **Compare** for the linked three-pane 3D/SVG/PDF view; PDF overlays are also available. The historical audit and offline-package instructions below refer to the complete local project, not this reduced web edition.
 
 Open **9-glenn-viewer.html** for the self-contained, offline viewer, or **index.html** in this folder. All view modes share a compact white-and-blue interface with a single header and toolbar. The canvas fills the workspace; drawing and floor selectors stay in the toolbar, while **Controls** opens floors, layers and display options in a dismissible panel. Drawing details appear on demand and can be closed with × or Escape. It includes ground, first and cellar plans, four elevations, section X–X, and an interactive 3D building mode.

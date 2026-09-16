@@ -53,51 +53,12 @@ function projection(data, drawing) {
 }
 
 export function mountTripleView() {
-  const section = document.createElement("section");
-  section.id = "triple-view";
-  section.innerHTML = `<div class="view-heading triple-heading"><div><div class="eyebrow">SHARED DRAWING MODEL</div><h1>Compare drawings</h1><p>3D model, vector drawing and original PDF</p></div><label>Drawing <select id="triple-drawing" aria-label="Comparison drawing"></select></label></div>
-    <div class="toolbar triple-toolbar"><div><button class="tool icon-button" id="triple-out" aria-label="Zoom out">−</button><output id="triple-zoom">100%</output><button class="tool icon-button" id="triple-in" aria-label="Zoom in">+</button><button class="tool" id="triple-fit">Fit all</button></div><div><button class="tool" id="triple-aligned" aria-pressed="true">Aligned</button><button class="tool" id="triple-angled" aria-pressed="false">Angled 3D</button></div><label class="triple-outline-option"><input id="triple-outlines" type="checkbox" checked> Outlines</label></div>
-    <div class="triple-panes"><figure><figcaption>3D model <span id="triple-projection">Aligned</span></figcaption><div class="triple-surface" id="triple-model"><svg id="triple-input" aria-label="3D comparison. Drag to pan, scroll or pinch to zoom."></svg></div></figure><figure><figcaption>SVG <span>Editable geometry</span></figcaption><div class="triple-surface" id="triple-vector"></div></figure><figure><figcaption>PDF drawing <span id="triple-sheet"></span></figcaption><div class="triple-surface" id="triple-source"></div></figure></div><footer class="statusbar"><span>Linked comparison</span><span id="triple-hint">Linked pan and zoom · drag or scroll in any pane</span></footer><p id="triple-error" role="alert" hidden></p>`;
-  document.querySelector(".main").append(section);
-  const roofTools = document.createElement("div");
-  roofTools.id = "triple-roof-tools";
-  roofTools.hidden = true;
-  roofTools.innerHTML = `<label>Roof <select id="triple-roof-component"></select></label><label><input id="triple-roof-overlay" type="checkbox" checked> Model edges on PDF</label><span style="color:#00847c">SVG roof edges from the 3D model</span>`;
-  const roofSelect = roofTools.querySelector("select");
-  for (const [value, label] of [
-    ["all", "All roofs"],
-    ["upper", "First-floor roof · all upper"],
-    ["lower", "Ground-floor roofs · all lower"],
-  ])
-    roofSelect.add(new Option(label, value));
-  const roofNames = {
-    "main-hip": "Main upper hip",
-    "central-hip": "Projecting upper hip",
-    "arch-gable": "Front gable",
-    "garage-hip": "Garage",
-    "portico-deck": "Portico",
-    "bay-lean-to": "Rear bay",
-  };
-  for (const component of new Set(
-    window.BUILDING_SPEC.roofAssembly.faces
-      .filter((f) => f.kind === "surface")
-      .map((f) => f.component),
-  ))
-    roofSelect.add(new Option(roofNames[component] || component, component));
-  section.querySelector(".triple-toolbar").after(roofTools);
-  const select = section.querySelector("select");
-  for (const d of window.DRAWINGS) select.add(new Option(d.title, d.id));
-  select.add(new Option("Roof comparison · ground floor", "roof-ground"));
-  select.add(new Option("Roof comparison · first floor", "roof-first"));
+  const section = document.querySelector("#triple-view");
   let instance, initialization;
   let activation = 0;
   const api = {
     async activate(enabled, id) {
       const request = ++activation;
-      document.body.classList.toggle("mode-compare", enabled);
-      document
-        .querySelector("#mode-compare")
-        .setAttribute("aria-pressed", String(enabled));
       if (instance) instance.active = enabled;
       if (!enabled) return;
       try {
@@ -126,9 +87,6 @@ export function mountTripleView() {
     get instance() {
       return instance;
     },
-  };
-  select.onchange = () => {
-    location.hash = `compare/${select.value}`;
   };
   window.TripleView = api;
   return api;
