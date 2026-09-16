@@ -12,4 +12,4 @@
 - [x] Consolidate current layout styles and remove obsolete layout selectors.
 - [x] Add startup regression checks with the WebGPU request held or failed: first paint, functional 2D, navigation during load, retry and mobile layout.
 - [x] Run the existing three-pane regression and 3D checks against `index.html`.
-- [ ] Verify the published branch diff, push it, wait for Pages, and verify the public page.
+- [x] Verify the published branch diff, push it, wait for Pages, and verify the public page.
