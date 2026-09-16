@@ -1,6 +1,8 @@
 # 9 Glenn · Clean architectural vectors
 
-Live viewer: **https://pomi-au.github.io/9glenn/**. GitHub Pages publishes the repository root from `main`; `.nojekyll` serves the prebuilt files directly. `index.html` is the only viewer entry point. Rebuild the drawings and 3D bundle with `npm run build` before publishing updates. This web build does not generate the omitted offline package or audits.
+Live viewer: **https://pomi-au.github.io/9glenn/**. GitHub Pages publishes the repository root from `codex/webgpu-photorealism`; `.nojekyll` serves the prebuilt files directly. `index.html` is the only viewer entry point. Rebuild the drawings and 3D bundle with `npm run build` before publishing updates. This web build does not generate the omitted offline package or audits.
+
+Published source: committed WebGPU version `2d9631fee50bf929e633e045364a3662636793a6` from the local `codex/webgpu-photorealism` branch. Uncommitted development changes are excluded.
 
 This web edition excludes the offline HTML duplicate, drawing-set ZIP, audit folder, comparison PDF and original reference scans. It retains all eight SVG drawings, the 3D model and SVG/3D comparison. PDF overlays and the PDF comparison pane are disabled. The historical audit and offline-package instructions below refer to the complete local project, not this reduced web edition.
 

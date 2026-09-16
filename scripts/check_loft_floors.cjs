@@ -14,7 +14,7 @@ fs.mkdirSync(out, { recursive: true });
 const helper = buildSync({
   stdin: {
     contents:
-      'import {Box3,Vector3} from "three";window.LoftTest={Box3,Vector3};',
+      'import {Box3,Vector3,Raycaster} from "three";window.LoftTest={Box3,Vector3,Raycaster};',
     resolveDir: root,
   },
   bundle: true,
@@ -72,6 +72,7 @@ const helper = buildSync({
       });
       i.update();
       const poses = {
+        gap: { target: [16.3, 0.1, 3.8], eye: [17.6, 4.3, 5.8], half: 1.45 },
         garage: { target: [3, -0.45, 10.5], eye: [7, 5, 16], half: 3.7 },
         circulation: {
           target: [18.52, 0.1, 10.15],
@@ -311,6 +312,7 @@ const helper = buildSync({
         fs.readFileSync(path.join(out, "before-checks.json")),
       );
       for (const f of before.inventory.floors) {
+        if (f.metadata.finishPatch === "stair-floor") continue;
         const next = results.inventory.floors.find((n) => n.key === f.key);
         assert(next, `Existing floor ${f.key}`);
         for (const property of [
@@ -327,6 +329,38 @@ const helper = buildSync({
             `${f.key} preserves ${property}`,
           );
       }
+      for (const f of before.inventory.floors) {
+        if (f.metadata.finishPatch === "stair-floor") continue;
+        const next = results.inventory.floors.find((n) => n.key === f.key);
+        if (f.metadata.kind === "slab") {
+          assert.deepEqual(
+            next.materials[1],
+            f.materials[1],
+            `${f.key} original sidewall`,
+          );
+          assert.deepEqual(
+            next.materials[2],
+            f.materials[0],
+            `${f.key} original underside`,
+          );
+          assert.equal(next.materials[0].userData.generatedTexture, "cement");
+        } else if (
+          f.metadata.kind === "room" &&
+          f.metadata.elevation === -514
+        ) {
+          assert.equal(next.materials[0].userData.generatedTexture, "cement");
+        } else
+          assert.deepEqual(
+            next.materials,
+            f.materials,
+            `${f.key} original room finish unchanged`,
+          );
+      }
+      for (const m of results.inventory.floors
+        .flatMap((f) => f.materials)
+        .filter((m) => m.userData.generatedTexture === "cement"))
+        for (const key of ["map", "normalMap", "roughnessMap"])
+          assert(m[key]?.std > 0.5, `Cement loaded nonuniform ${key}`);
       assert.deepEqual(
         results.inventory.controls,
         before.inventory.controls,
@@ -334,12 +368,56 @@ const helper = buildSync({
       );
       results.geometryUnchanged = true;
     }
-    for (const kind of view ? view.split(",") : ["garage", "circulation"]) {
+    for (const kind of view
+      ? view.split(",")
+      : ["garage", "circulation", "gap"]) {
       results[kind] = { camera: await camera(kind) };
       await capture(kind + "-explore");
       results[kind].photo = await photo(kind);
       console.log(kind, JSON.stringify(results[kind].photo));
     }
+    results.gapHits = await page.evaluate(() => {
+      const i = Building3D.instance,
+        T = LoftTest;
+      const targets = [
+        [16.3, 3.8],
+        [9.33, 7.935],
+        [12, 5.775],
+        [12, 7.985],
+        [18, 10.36],
+        [18.7, 10.36],
+        [19.4, 9.95],
+      ];
+      const floors = i.model.pickables.filter(
+        (m) =>
+          m.userData.floor === "ground" &&
+          ["slab", "room", "finish"].includes(m.userData.kind),
+      );
+      i.scene.updateMatrixWorld(true);
+      return targets.map(([x, z]) => {
+        const hit = new T.Raycaster(
+          new T.Vector3(x, 2, z),
+          new T.Vector3(0, -1, 0),
+        ).intersectObjects(floors, false)[0];
+        if (!hit) return { x, z };
+        const m = Array.isArray(hit.object.material)
+          ? hit.object.material[hit.face.materialIndex]
+          : hit.object.material;
+        return {
+          x,
+          z,
+          y: hit.point.y,
+          kind: hit.object.userData.kind,
+          patch: hit.object.userData.finishPatch,
+          finish: m.userData.generatedTexture,
+        };
+      });
+    });
+    if (!baseline)
+      for (const hit of results.gapHits) {
+        assert.equal(hit.finish, "oak", `Wood coverage at ${hit.x},${hit.z}`);
+        assert(Math.abs(hit.y - 0.004) < 1e-5);
+      }
     results.cutaway = await page.evaluate(() => {
       const i = Building3D.instance;
       return {
